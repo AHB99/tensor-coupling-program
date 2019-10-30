@@ -60,7 +60,7 @@ int main() {
 	resolver.reduceReducibleTensors();
 	resolver.substitutePsiSpinors();
 	resolver.reduceRightBbtChains();
-
+	resolver.evaluateChargeConjugates();
 
 	//MathExpressionTerm tempMET;
 	//tempMET.inputByUserPhase2();

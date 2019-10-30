@@ -911,25 +911,28 @@ void MathExpressionTerm::renameDeltas(std::vector<std::pair<std::string, std::st
 void MathExpressionTerm::printPhase2() const {
 	print();
 	fab.print();
-	cout << "*";
-	if (spinors.size() != 2) {
-		cout << "<0|";
-	}
-	else {
-		spinors[0].print();
-	}
-	leftBbtChain.print();
 	if (hasChargeConjugate) {
-		cout << " B ";
+		if (spinors.size() != 2) {
+			cout << "<0|";
+		}
+		else {
+			spinors[0].print();
+		}
+		leftBbtChain.print();
+		if (hasChargeConjugate) {
+			cout << " B ";
+		}
+		gammaTensor.print();
+		rightBbtChain.print();
+		if (spinors.size() != 2) {
+			cout << "|0>";
+		}
+		else {
+			spinors[1].print();
+		}
 	}
-	gammaTensor.print();
-	rightBbtChain.print();
-	if (spinors.size() != 2) {
-		cout << "|0>";
-	}
-	else {
-		spinors[1].print();
-	}
+	//If no charge conjugate, ignore bbt section completely, because charge conjugate has evaluated it.
+
 	for (auto& matterTensor : matterTensors) {
 		cout << "*";
 		matterTensor.print();
@@ -1332,6 +1335,7 @@ void MathExpressionTerm::reduceRightBbtChainByEvaluation() {
 
 }
 
+
 void MathExpressionTerm::generateDeltasByRightBbtChainEvaluation(int locationOfFirstBOperator, int locationOfLastCoupledBbtOperator) {
 	int i = locationOfFirstBOperator, j = locationOfLastCoupledBbtOperator;
 	while (i < j) {
@@ -1344,4 +1348,25 @@ void MathExpressionTerm::generateDeltasByRightBbtChainEvaluation(int locationOfF
 
 void MathExpressionTerm::deleteBbtsByRightBbtChainEvaluation(int locationOfFirstBOperator, int locationOfLastCoupledBbtOperator) {
 	rightBbtChain.deleteBbtByRange(locationOfFirstBOperator, locationOfLastCoupledBbtOperator+1);
+}
+
+
+void MathExpressionTerm::evaluateChargeConjugate() {
+	LeviCivita leviToAdd(false);
+
+	//Adding leftbbts then rightbbts, both in reverse.
+	for (int i = leftBbtChain.getSize() - 1; i >= 0; --i) {
+		leviToAdd.addIndex(leftBbtChain.getBbtNameAt(i));
+	}
+	for (int i = rightBbtChain.getSize() - 1; i >= 0; --i) {
+		leviToAdd.addIndex(rightBbtChain.getBbtNameAt(i));
+	}
+
+	//If odd number of b, negative
+	if (leftBbtChain.getSize() % 2 != 0) { multiplyWithCoefficient(Coefficient(-1)); }
+
+	addLeviCivita(leviToAdd);
+
+	//Now entire bbt section is considered invalid
+	hasChargeConjugate = false;
 }

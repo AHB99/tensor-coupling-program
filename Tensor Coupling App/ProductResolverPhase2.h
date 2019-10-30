@@ -19,6 +19,7 @@ public:
 	void reduceReducibleTensors();
 	void substitutePsiSpinors();
 	void reduceRightBbtChains();
+	void evaluateChargeConjugates();
 
 	MathExpression initialInput;
 	MathExpression finalMathExpression;

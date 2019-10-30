@@ -99,3 +99,10 @@ void ProductResolverPhase2::reduceRightBbtChains() {
 	cout << "\nBbt reduced: " << endl;
 	finalMathExpression.printPhase2();
 }
+
+void ProductResolverPhase2::evaluateChargeConjugates() {
+	finalMathExpression.evaluateChargeConjugates();
+	//DEBUG
+	cout << "\nCharge conjugate evaluated: " << endl;
+	finalMathExpression.printPhase2();
+}

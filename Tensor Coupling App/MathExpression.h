@@ -103,6 +103,7 @@ public:
 	}
 
 	void reduceRightBbtChainsByEvaluation();
+	void evaluateChargeConjugates();
 
 private:
 	//The Expression Substitutions from REFERENCE.pdf

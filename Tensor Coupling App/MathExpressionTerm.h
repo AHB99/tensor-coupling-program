@@ -177,6 +177,8 @@ public:
 
 	void reduceRightBbtChainByEvaluation();
 
+	void evaluateChargeConjugate();
+
 private:
 	//Helper for Levi grouping
 	void moveLeviAtLocationToLeft(int location);

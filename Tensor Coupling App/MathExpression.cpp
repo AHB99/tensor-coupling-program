@@ -2060,6 +2060,12 @@ void MathExpression::reduceRightBbtChainsByEvaluation() {
 	}
 }
 
+void MathExpression::evaluateChargeConjugates() {
+	for (auto& met : mathExpressionTerms) {
+		met.evaluateChargeConjugate();
+	}
+}
+
 
 
 
