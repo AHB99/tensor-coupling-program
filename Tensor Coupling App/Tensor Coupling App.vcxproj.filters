@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Bbt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BbtChain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Coefficient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Delta.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GammaTensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IrreducibleTensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LeviCivita.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MathExpression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MathExpressionTerm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MatterTensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalizedTensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProductResolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProductResolverPhase2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Spinor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tensor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorTerm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UtilityFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bbt.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BbtChain.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Coefficient.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Delta.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fab.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GammaTensor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IrreducibleTensor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LeviCivita.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MathExpression.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MathExpressionTerm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MatterTensor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalizedTensor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProductResolver.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProductResolverPhase2.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spinor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tensor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorTerm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilityFunctions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
