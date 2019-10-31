@@ -61,6 +61,7 @@ int main() {
 	resolver.substitutePsiSpinors();
 	resolver.reduceRightBbtChains();
 	resolver.evaluateChargeConjugates();
+	resolver.simplifyDeltasOfEvaluatedTerms();
 
 	//MathExpressionTerm tempMET;
 	//tempMET.inputByUserPhase2();

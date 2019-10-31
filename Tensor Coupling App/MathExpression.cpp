@@ -54,18 +54,6 @@ void MathExpression::simplifyCoefficientsOfAllTerms() {
 
 
 void MathExpression::simplifyExpressionByDeltas() {
-
-	//int i = 0;
-	//while (i < mathExpressionTerms.size()) {
-	//	//If the term got cancelled, delete it, else increment the loop.
-	//	if (!mathExpressionTerms[i].simplifyTermByDeltas()) {
-	//		mathExpressionTerms.erase(mathExpressionTerms.begin() + i);
-	//	}
-	//	else {
-	//		++i;
-	//	}
-	//}
-
 	//Possible efficient redo.
 
 	for (auto& MET : mathExpressionTerms) {
@@ -2066,6 +2054,13 @@ void MathExpression::evaluateChargeConjugates() {
 	}
 }
 
+void MathExpression::simplifyExpressionByDeltasPhase2() {
+	//Possible efficient redo
+	for (auto& MET : mathExpressionTerms) {
+		MET.simplifyTermByDeltasPhase2();
+	}
+	mathExpressionTerms.erase(std::remove_if(mathExpressionTerms.begin(), mathExpressionTerms.end(), isCoefficientZero), mathExpressionTerms.end());
+}
 
 
 

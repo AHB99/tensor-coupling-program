@@ -109,3 +109,13 @@ int LeviCivita::numberOfSimilarIndices(const LeviCivita& otherLevi) const {
 }
 
 
+//Phase 2
+bool LeviCivita::replaceIndexIfPresent(std::string oldIndex, std::string newIndex) {
+	for (auto& index : indices) {
+		if (index == oldIndex) {
+			index = newIndex;
+			return true;
+		}
+	}
+	return false;
+}

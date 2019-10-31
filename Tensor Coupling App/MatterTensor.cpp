@@ -39,3 +39,19 @@ void MatterTensor::inputByUser() {
 	cout << "Transpose? (0 = No, 1 = Yes): ";
 	cin >> isTranspose;
 }
+
+bool MatterTensor::replaceIndexIfPresent(std::string oldIndex, std::string newIndex) {
+	for (auto& upperIndex : upperIndices) {
+		if (upperIndex == oldIndex) {
+			upperIndex = newIndex;
+			return true;
+		}
+	}
+	for (auto& lowerIndex : lowerIndices) {
+		if (lowerIndex == oldIndex) {
+			lowerIndex = newIndex;
+			return true;
+		}
+	}
+	return false;
+}

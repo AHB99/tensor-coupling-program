@@ -29,6 +29,9 @@ public:
 		result.insert(result.begin(), lowerIndices.begin(), lowerIndices.end());
 		return result;
 	}
+
+	bool replaceIndexIfPresent(std::string oldIndex, std::string newIndex);
+
 private:
 	std::vector<std::string> upperIndices;
 	std::vector<std::string> lowerIndices;

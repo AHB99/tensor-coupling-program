@@ -1,5 +1,7 @@
 #include "Delta.h"
 #include "IrreducibleTensor.h"
+#include "LeviCivita.h"
+#include "MatterTensor.h"
 #include "Tensor.h"
 
 void Delta::print() const {
@@ -71,6 +73,16 @@ bool Delta::isCancellationDeltaForTensor(const IrreducibleTensor& tensor) const 
 bool Delta::replaceIndexIfPossible(IrreducibleTensor& tensor) const {
 	//Assumes that only 1 match is possible
 	return (tensor.replaceIndexIfPresent(upperIndex, lowerIndex)|| tensor.replaceIndexIfPresent(lowerIndex, upperIndex));
+}
+
+bool Delta::replaceIndexIfPossible(MatterTensor& tensor) const {
+	//Assumes that only 1 match is possible
+	return (tensor.replaceIndexIfPresent(upperIndex, lowerIndex) || tensor.replaceIndexIfPresent(lowerIndex, upperIndex));
+}
+
+bool Delta::replaceIndexIfPossible(LeviCivita& tensor) const {
+	//Assumes that only 1 match is possible
+	return (tensor.replaceIndexIfPresent(upperIndex, lowerIndex) || tensor.replaceIndexIfPresent(lowerIndex, upperIndex));
 }
 
 bool Delta::isIdentical(const Delta& otherDelta) const {

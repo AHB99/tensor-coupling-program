@@ -58,7 +58,7 @@ public:
 	void addLeviCivita(const LeviCivita& inpLeviCivita);
 
 	int getNumberOfLeviCivitas() const {
-		return leviCevitas.size();
+		return leviCivitas.size();
 	}
 	int getNumberOfIrreducibleTensors() const {
 		return irreducibleTensors.size();
@@ -67,7 +67,7 @@ public:
 		return irreducibleTensors[location];
 	}
 	LeviCivita getLeviAt(int location) const {
-		return leviCevitas[location];
+		return leviCivitas[location];
 	}
 	//Assuming index exists in term. Returns -1 if found in Single Levi Civita
 	int getTensorLocationOfFirstOccurenceOfIndex(const std::string& index) const;
@@ -179,6 +179,11 @@ public:
 
 	void evaluateChargeConjugate();
 
+	bool simplifyTermByDeltasPhase2();
+
+
+
+
 private:
 	//Helper for Levi grouping
 	void moveLeviAtLocationToLeft(int location);
@@ -186,7 +191,7 @@ private:
 	//Sets coeff = 0 if true. Break simplification if coeff = 0
 	bool checkForCancellationDeltas();
 
-	void renameIrreducibleTensorsByDeltasIfPossible();
+	void renameIrreducibleTensorsByDeltas();
 
 	//Multiplies coefficient by 5 (because SU(5)) if match found
 	void solveMatchingDeltas();
@@ -253,7 +258,7 @@ private:
 	//Member variables
 	std::vector<IrreducibleTensor> irreducibleTensors;
 	std::vector<Delta> deltas;
-	std::vector<LeviCivita> leviCevitas;
+	std::vector<LeviCivita> leviCivitas;
 	std::vector<NormalizedTensor> normalizedTensors;
 
 	Coefficient coefficient;
@@ -269,6 +274,9 @@ public:
 	//Helper for Bbt Evaluation
 	void generateDeltasByRightBbtChainEvaluation(int locationOfFirstBOperator, int locationOfLastCoupledBbtOperator);
 	void deleteBbtsByRightBbtChainEvaluation(int locationOfFirstBOperator, int locationOfLastCoupledBbtOperato);
+
+	void renameAllTensorsAndLevisByDeltas();
+
 
 	Fab fab;
 	BbtChain leftBbtChain;

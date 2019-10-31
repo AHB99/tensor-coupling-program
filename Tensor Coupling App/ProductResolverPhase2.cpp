@@ -105,4 +105,13 @@ void ProductResolverPhase2::evaluateChargeConjugates() {
 	//DEBUG
 	cout << "\nCharge conjugate evaluated: " << endl;
 	finalMathExpression.printPhase2();
+
+}
+
+void ProductResolverPhase2::simplifyDeltasOfEvaluatedTerms() {
+	finalMathExpression.simplifyExpressionByDeltasPhase2();
+
+	//DEBUG
+	cout << "\nDeltas simplified: " << endl;
+	finalMathExpression.printPhase2();
 }

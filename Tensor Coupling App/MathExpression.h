@@ -105,6 +105,9 @@ public:
 	void reduceRightBbtChainsByEvaluation();
 	void evaluateChargeConjugates();
 
+	void simplifyExpressionByDeltasPhase2();
+
+
 private:
 	//The Expression Substitutions from REFERENCE.pdf
 

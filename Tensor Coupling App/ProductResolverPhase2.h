@@ -20,6 +20,7 @@ public:
 	void substitutePsiSpinors();
 	void reduceRightBbtChains();
 	void evaluateChargeConjugates();
+	void simplifyDeltasOfEvaluatedTerms();
 
 	MathExpression initialInput;
 	MathExpression finalMathExpression;

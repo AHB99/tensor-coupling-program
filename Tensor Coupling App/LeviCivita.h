@@ -48,6 +48,10 @@ public:
 		return indices;
 	}
 
+	//Phase 2
+	bool replaceIndexIfPresent(std::string oldIndex, std::string newIndex);
+
+
 
 private:
 	std::vector<std::string> indices;

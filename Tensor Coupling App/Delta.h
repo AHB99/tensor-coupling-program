@@ -11,6 +11,8 @@ using std::cin;
 using std::endl;
 
 class IrreducibleTensor;
+class LeviCivita;
+class MatterTensor;
 class Tensor;
 
 class Delta {
@@ -51,6 +53,8 @@ public:
 
 	//Phase 2
 	bool replaceIndexIfPossible(Tensor& tensor) const;
+	bool replaceIndexIfPossible(MatterTensor& tensor) const;
+	bool replaceIndexIfPossible(LeviCivita& tensor) const;
 
 
 private:

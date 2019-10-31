@@ -12,7 +12,7 @@ void MathExpressionTerm::print() const {
 		beg->print();
 		cout << "*";
 	}
-	for (auto beg = leviCevitas.begin(); beg < leviCevitas.end(); ++beg) {
+	for (auto beg = leviCivitas.begin(); beg < leviCivitas.end(); ++beg) {
 		beg->print();
 		cout << "*";
 	}
@@ -35,7 +35,7 @@ void MathExpressionTerm::printLatex() const {
 	for (auto beg = deltas.begin(); beg < deltas.end(); ++beg) {
 		beg->printLatex();
 	}
-	for (auto beg = leviCevitas.begin(); beg < leviCevitas.end(); ++beg) {
+	for (auto beg = leviCivitas.begin(); beg < leviCivitas.end(); ++beg) {
 		beg->printLatex();
 	}
 	for (auto beg = irreducibleTensors.begin(); beg < irreducibleTensors.end(); ++beg) {
@@ -61,7 +61,7 @@ void MathExpressionTerm::inputByUser() {
 	for (int i = 0; i < tempNum; ++i) {
 		LeviCivita tempLevi;
 		tempLevi.inputByUser();
-		leviCevitas.push_back(tempLevi);
+		leviCivitas.push_back(tempLevi);
 	}
 	cout << "Number of Irreducible Tensors: ";
 	cin >> tempNum;
@@ -86,7 +86,7 @@ void MathExpressionTerm::mergeTerms(const MathExpressionTerm& otherTerm) {
 	deltas.insert(deltas.end(), otherTerm.deltas.begin(), otherTerm.deltas.end());
 
 	//Merge the levis
-	leviCevitas.insert(leviCevitas.end(), otherTerm.leviCevitas.begin(), otherTerm.leviCevitas.end());
+	leviCivitas.insert(leviCivitas.end(), otherTerm.leviCivitas.begin(), otherTerm.leviCivitas.end());
 
 	//Merge the irreducible tensors
 	irreducibleTensors.insert(irreducibleTensors.end(), otherTerm.irreducibleTensors.begin(), otherTerm.irreducibleTensors.end());
@@ -136,7 +136,7 @@ bool MathExpressionTerm::checkForCancellationDeltas() {
 	return false;
 }
 
-void MathExpressionTerm::renameIrreducibleTensorsByDeltasIfPossible() {
+void MathExpressionTerm::renameIrreducibleTensorsByDeltas() {
 	for (int i = 0; i < deltas.size(); ++i) {
 		for (int j = 0; j < irreducibleTensors.size(); ++j) {
 			//If a rename occured
@@ -174,7 +174,7 @@ bool MathExpressionTerm::simplifyTermByDeltas() {
 	if (checkForCancellationDeltas()) {
 		return false;
 	}
-	renameIrreducibleTensorsByDeltasIfPossible();
+	renameIrreducibleTensorsByDeltas();
 	solveMatchingDeltas();
 	return true;
 }
@@ -191,7 +191,7 @@ void MathExpressionTerm::addDelta(const Delta& inpDelta) {
 }
 
 void MathExpressionTerm::addLeviCivita(const LeviCivita& inpLeviCivita) {
-	leviCevitas.push_back(inpLeviCivita);
+	leviCivitas.push_back(inpLeviCivita);
 }
 
 void MathExpressionTerm::setCoefficient(int numerator, int denominator) {
@@ -208,10 +208,10 @@ void MathExpressionTerm::setCoefficient(Coefficient otherCoefficient) {
 
 
 void MathExpressionTerm::getNamesInCommonBetweenLevis(std::vector<std::string>& namesInCommon, int locationOfFirstLevi, int locationOfSecondLevi) const {
-	for (int i = 0; i < leviCevitas[locationOfFirstLevi].getSize(); ++i) {
-		for (int j = 0; j < leviCevitas[locationOfSecondLevi].getSize(); ++j) {
-			if (leviCevitas[locationOfFirstLevi].getNameAtLocation(i) == leviCevitas[locationOfSecondLevi].getNameAtLocation(j)) {
-				namesInCommon.push_back(leviCevitas[locationOfFirstLevi].getNameAtLocation(i));
+	for (int i = 0; i < leviCivitas[locationOfFirstLevi].getSize(); ++i) {
+		for (int j = 0; j < leviCivitas[locationOfSecondLevi].getSize(); ++j) {
+			if (leviCivitas[locationOfFirstLevi].getNameAtLocation(i) == leviCivitas[locationOfSecondLevi].getNameAtLocation(j)) {
+				namesInCommon.push_back(leviCivitas[locationOfFirstLevi].getNameAtLocation(i));
 				break;
 			}
 		}
@@ -222,16 +222,16 @@ void MathExpressionTerm::moveNamesInCommonBetweenLevisToLeft(std::vector<std::st
 	//Here, "i" also represents the location a particular name must go to in each Levi
 	for (int i = 0; i < namesInCommon.size(); ++i) {
 		//For first tensor
-		int locationOfIndexInLevi = leviCevitas[locationOfFirstLevi].getLocationOfIndex(namesInCommon[i]);
+		int locationOfIndexInLevi = leviCivitas[locationOfFirstLevi].getLocationOfIndex(namesInCommon[i]);
 		while (locationOfIndexInLevi != i) {
-			leviCevitas[locationOfFirstLevi].swapIndexAtLocationWithOneOnLeft(locationOfIndexInLevi);
+			leviCivitas[locationOfFirstLevi].swapIndexAtLocationWithOneOnLeft(locationOfIndexInLevi);
 			coefficient *= -1;
 			--locationOfIndexInLevi;
 		}
 		//For second tensor
-		locationOfIndexInLevi = leviCevitas[locationOfSecondLevi].getLocationOfIndex(namesInCommon[i]);
+		locationOfIndexInLevi = leviCivitas[locationOfSecondLevi].getLocationOfIndex(namesInCommon[i]);
 		while (locationOfIndexInLevi != i) {
-			leviCevitas[locationOfSecondLevi].swapIndexAtLocationWithOneOnLeft(locationOfIndexInLevi);
+			leviCivitas[locationOfSecondLevi].swapIndexAtLocationWithOneOnLeft(locationOfIndexInLevi);
 			coefficient *= -1;
 			--locationOfIndexInLevi;
 		}
@@ -247,13 +247,13 @@ MathExpression MathExpressionTerm::expandPairOfLeviCivitas(const MathExpression&
 	moveNamesInCommonBetweenLevisToLeft(termCommonNames, 0, 1);
 
 	MathExpression substitutedLeviExpression;
-	substitutedLeviExpression.setSubstitutionForLeviCivita(termCommonNames.size(), leviCevitas[0], leviCevitas[1], pred2Match, pred1Match, pred0Match);
+	substitutedLeviExpression.setSubstitutionForLeviCivita(termCommonNames.size(), leviCivitas[0], leviCivitas[1], pred2Match, pred1Match, pred0Match);
 	return substitutedLeviExpression;
 	
 }
 
 void MathExpressionTerm::deletePairOfLeviCivitas() {
-	leviCevitas.erase(leviCevitas.begin(), leviCevitas.begin()+2);
+	leviCivitas.erase(leviCivitas.begin(), leviCivitas.begin()+2);
 }
 
 void MathExpressionTerm::reorderIndicesOfIrreducibleTensorsAndLeviCivitas() {
@@ -291,7 +291,7 @@ void MathExpressionTerm::reorderIndicesOfIrreducibleTensorsAndLeviCivitas() {
 			}
 		}
 	}
-	for (auto& levi : leviCevitas) {
+	for (auto& levi : leviCivitas) {
 		//Reorder indices
 		bool modified = true;
 		while (modified) {
@@ -318,8 +318,8 @@ void MathExpressionTerm::sortIrreducibleTensors() {
 
 int MathExpressionTerm::getTensorLocationOfFirstOccurenceOfIndex(const std::string& index) const {
 	//Check Levi first, as it is positioned on left always
-	if (leviCevitas.size() == 1) {
-		if (leviCevitas[0].doesIndexExist(index)) {
+	if (leviCivitas.size() == 1) {
+		if (leviCivitas[0].doesIndexExist(index)) {
 			return -1;
 		}
 	}
@@ -348,9 +348,9 @@ std::vector<std::string> MathExpressionTerm::getListOfAllIndices() const {
 		}
 	}
 	//Only if single levi
-	if (leviCevitas.size() == 1) {
-		for (int i = 0; i < leviCevitas[0].getSize(); ++i) {
-			std::string currentName = leviCevitas[0].getNameAtLocation(i);
+	if (leviCivitas.size() == 1) {
+		for (int i = 0; i < leviCivitas[0].getSize(); ++i) {
+			std::string currentName = leviCivitas[0].getNameAtLocation(i);
 			if ((result.empty()) || (std::find(result.begin(), result.end(), currentName) == result.end())) {
 				result.push_back(currentName);
 			}
@@ -373,8 +373,8 @@ void MathExpressionTerm::performRenamesOnIrreducibleTensors(const std::vector<st
 }
 
 void MathExpressionTerm::performRenamesOnLeviCivita(const std::vector<std::pair<std::string, std::string>> renameMap) {
-	for (int i = 0; i < leviCevitas[0].getSize(); ++i) {
-		leviCevitas[0].changeIndexAtLocationTo(i, getNewNameFromRenameMap(leviCevitas[0].getNameAtLocation(i), renameMap));
+	for (int i = 0; i < leviCivitas[0].getSize(); ++i) {
+		leviCivitas[0].changeIndexAtLocationTo(i, getNewNameFromRenameMap(leviCivitas[0].getNameAtLocation(i), renameMap));
 	}
 }
 
@@ -487,8 +487,8 @@ void MathExpressionTerm::getAllPermutationsOfAllAmbiguousZones(std::vector<MathE
 		}
 		MathExpressionTerm tempTerm;
 		tempTerm.addAllIrreducibleTensors(currentArrangementOfIrreducibleTensors);
-		if (leviCevitas.size() == 1) {
-			tempTerm.addLeviCivita(leviCevitas[0]);
+		if (leviCivitas.size() == 1) {
+			tempTerm.addLeviCivita(leviCivitas[0]);
 		}
 		tempTerm.setCoefficient(coefficient);
 		allIrreducibleTensorTermPermutations.push_back(tempTerm);
@@ -509,11 +509,11 @@ void MathExpressionTerm::getAllPermutationsOfAllAmbiguousZones(std::vector<MathE
 void MathExpressionTerm::groupLevisBySimilarIndices() {
 	int leftBound = 0;
 	for (int commonIndices = 5; commonIndices >= 0; --commonIndices) {
-		for (int i = leftBound; i < leviCevitas.size(); ++i) {
+		for (int i = leftBound; i < leviCivitas.size(); ++i) {
 			bool found = false;
-			for (int j = i; j < leviCevitas.size(); ++j) {
+			for (int j = i; j < leviCivitas.size(); ++j) {
 				if (i != j) {
-					if (leviCevitas[i].numberOfSimilarIndices(leviCevitas[j]) == commonIndices) {
+					if (leviCivitas[i].numberOfSimilarIndices(leviCivitas[j]) == commonIndices) {
 						moveLeviAtLocationToLeft(i);
 						moveLeviAtLocationToLeft(j);
 						leftBound += 2;
@@ -526,16 +526,16 @@ void MathExpressionTerm::groupLevisBySimilarIndices() {
 				break;
 			}
 		}
-		if ((leviCevitas.size() - leftBound) < 3) {
+		if ((leviCivitas.size() - leftBound) < 3) {
 			break;
 		}
 	}
 }
 
 void MathExpressionTerm::moveLeviAtLocationToLeft(int location) {
-	LeviCivita temp = leviCevitas[location];
-	leviCevitas.erase(leviCevitas.begin() + location);
-	leviCevitas.insert(leviCevitas.begin(), temp);
+	LeviCivita temp = leviCivitas[location];
+	leviCivitas.erase(leviCivitas.begin() + location);
+	leviCivitas.insert(leviCivitas.begin(), temp);
 }
 
 
@@ -1277,7 +1277,7 @@ bool MathExpressionTerm::willBbtFormUsefulInteraction() {
 
 std::vector<std::string> MathExpressionTerm::getAllUniqueNamesOfTerm() const {
 	std::set<std::string> nameSet;
-	for (auto& levi : leviCevitas) {
+	for (auto& levi : leviCivitas) {
 		std::vector<std::string> leviIndices{ levi.getIndices() };
 		nameSet.insert(leviIndices.begin(), leviIndices.end());
 	}
@@ -1350,7 +1350,6 @@ void MathExpressionTerm::deleteBbtsByRightBbtChainEvaluation(int locationOfFirst
 	rightBbtChain.deleteBbtByRange(locationOfFirstBOperator, locationOfLastCoupledBbtOperator+1);
 }
 
-
 void MathExpressionTerm::evaluateChargeConjugate() {
 	LeviCivita leviToAdd(false);
 
@@ -1369,4 +1368,42 @@ void MathExpressionTerm::evaluateChargeConjugate() {
 
 	//Now entire bbt section is considered invalid
 	hasChargeConjugate = false;
+}
+
+void MathExpressionTerm::renameAllTensorsAndLevisByDeltas() {
+	renameIrreducibleTensorsByDeltas();
+	for (int i = 0; i < deltas.size(); ++i) {
+		for (int j = 0; j < matterTensors.size(); ++j) {
+			//If a rename occured
+			if (deltas[i].replaceIndexIfPossible(matterTensors[j])) {
+				//Delete that delta
+				deltas.erase(deltas.begin() + i);
+				//Decrement 'i' so it stays in the same position for next unchecked delta
+				--i;
+				break;
+			}
+		}
+	}
+	for (int i = 0; i < deltas.size(); ++i) {
+		for (int j = 0; j < leviCivitas.size(); ++j) {
+			//If a rename occured
+			if (deltas[i].replaceIndexIfPossible(leviCivitas[j])) {
+				//Delete that delta
+				deltas.erase(deltas.begin() + i);
+				//Decrement 'i' so it stays in the same position for next unchecked delta
+				--i;
+				break;
+			}
+		}
+	}
+}
+
+bool MathExpressionTerm::simplifyTermByDeltasPhase2() {
+	sumOverDeltas();
+	if (checkForCancellationDeltas()) {
+		return false;
+	}
+	renameAllTensorsAndLevisByDeltas();
+	solveMatchingDeltas();
+	return true;
 }
