@@ -7,6 +7,7 @@
 
 class ProductResolverPhase2 {
 public:
+	ProductResolverPhase2();
 	
 	void getInput();
 	void generateRawTerms();
@@ -21,7 +22,16 @@ public:
 	void reduceRightBbtChains();
 	void evaluateChargeConjugates();
 	void simplifyDeltasOfEvaluatedTerms();
+	void simplifyLevisOfEvaluatedTerms();
+
 
 	MathExpression initialInput;
 	MathExpression finalMathExpression;
+
+
+	//For determinant calcs for Levi
+	MathExpression predetermined2Match;
+	MathExpression predetermined1Match;
+	MathExpression predetermined0Match;
+
 };

@@ -8,41 +8,7 @@
 #include <regex>
 
 ProductResolver::ProductResolver() {
-	LeviCivita tempLevi2MatchFirst, tempLevi2MatchSecond, tempLevi1MatchFirst, tempLevi1MatchSecond, tempLevi0MatchFirst, tempLevi0MatchSecond;
-	//Determine 2 match expression
-	std::vector<std::string> tempVec2MatchFirst = { "i", "j", "k", "l", "m" };
-	std::vector<std::string> tempVec2MatchSecond = { "i", "j", "n", "o", "p" };
-	for (auto& index : tempVec2MatchFirst) {
-		tempLevi2MatchFirst.addIndex(index);
-	}
-	for (auto& index : tempVec2MatchSecond) {
-		tempLevi2MatchSecond.addIndex(index);
-	}
-	predetermined2Match.setPredeterminedSubstitutionsFor2Matches(tempLevi2MatchFirst, tempLevi2MatchSecond);
-
-	//Determine 1 match expression
-	std::vector<std::string> tempVec1MatchFirst = { "i", "j", "k", "l", "m" };
-	std::vector<std::string> tempVec1MatchSecond = { "i", "n", "o", "p", "q" };
-	for (auto& index : tempVec1MatchFirst) {
-		tempLevi1MatchFirst.addIndex(index);
-	}
-	for (auto& index : tempVec1MatchSecond) {
-		tempLevi1MatchSecond.addIndex(index);
-	}
-	predetermined1Match.setPredeterminedSubstitutionsFor1Match(tempLevi1MatchFirst, tempLevi1MatchSecond);
-
-
-	//Determine 0 match expression
-
-	std::vector<std::string> tempVec0MatchFirst = { "i", "j", "k", "l", "m" };
-	std::vector<std::string> tempVec0MatchSecond = { "n", "o", "p", "q", "r" };
-	for (auto& index : tempVec0MatchFirst) {
-		tempLevi0MatchFirst.addIndex(index);
-	}
-	for (auto& index : tempVec0MatchSecond) {
-		tempLevi0MatchSecond.addIndex(index);
-	}
-	predetermined0Match.setPredeterminedSubstitutionsFor0Matches(tempLevi0MatchFirst, tempLevi0MatchSecond);
+	setupPredeterminedLeviCivitaExpansions(this->predetermined2Match, this->predetermined1Match, this->predetermined0Match);
 }
 
 
@@ -197,6 +163,7 @@ void ProductResolver::erase0CoefficientReducibleTensorTerms() {
 	}
 }
 
+
 MathExpression ProductResolver::fullyReduceTensorTermAtLocation(int location) {
 		MathExpression result;
 		MathExpressionTerm tempTermFor1Coefficient;
@@ -257,4 +224,43 @@ void ProductResolver::fullyReduceTensorTerms() {
 
 void ProductResolver::normalizeIrreducibleTensorTerms() {
 	finalMathExpression.normalizeAllIrreducibleTensors();
+}
+
+//Phase 2
+void ProductResolver::setupPredeterminedLeviCivitaExpansions(MathExpression& predetermined2Match, MathExpression& predetermined1Match, MathExpression& predetermined0Match) {
+	LeviCivita tempLevi2MatchFirst, tempLevi2MatchSecond, tempLevi1MatchFirst, tempLevi1MatchSecond, tempLevi0MatchFirst, tempLevi0MatchSecond;
+	//Determine 2 match expression
+	std::vector<std::string> tempVec2MatchFirst = { "i", "j", "k", "l", "m" };
+	std::vector<std::string> tempVec2MatchSecond = { "i", "j", "n", "o", "p" };
+	for (auto& index : tempVec2MatchFirst) {
+		tempLevi2MatchFirst.addIndex(index);
+	}
+	for (auto& index : tempVec2MatchSecond) {
+		tempLevi2MatchSecond.addIndex(index);
+	}
+	predetermined2Match.setPredeterminedSubstitutionsFor2Matches(tempLevi2MatchFirst, tempLevi2MatchSecond);
+
+	//Determine 1 match expression
+	std::vector<std::string> tempVec1MatchFirst = { "i", "j", "k", "l", "m" };
+	std::vector<std::string> tempVec1MatchSecond = { "i", "n", "o", "p", "q" };
+	for (auto& index : tempVec1MatchFirst) {
+		tempLevi1MatchFirst.addIndex(index);
+	}
+	for (auto& index : tempVec1MatchSecond) {
+		tempLevi1MatchSecond.addIndex(index);
+	}
+	predetermined1Match.setPredeterminedSubstitutionsFor1Match(tempLevi1MatchFirst, tempLevi1MatchSecond);
+
+
+	//Determine 0 match expression
+
+	std::vector<std::string> tempVec0MatchFirst = { "i", "j", "k", "l", "m" };
+	std::vector<std::string> tempVec0MatchSecond = { "n", "o", "p", "q", "r" };
+	for (auto& index : tempVec0MatchFirst) {
+		tempLevi0MatchFirst.addIndex(index);
+	}
+	for (auto& index : tempVec0MatchSecond) {
+		tempLevi0MatchSecond.addIndex(index);
+	}
+	predetermined0Match.setPredeterminedSubstitutionsFor0Matches(tempLevi0MatchFirst, tempLevi0MatchSecond);
 }

@@ -62,6 +62,7 @@ int main() {
 	resolver.reduceRightBbtChains();
 	resolver.evaluateChargeConjugates();
 	resolver.simplifyDeltasOfEvaluatedTerms();
+	resolver.simplifyLevisOfEvaluatedTerms();
 
 	//MathExpressionTerm tempMET;
 	//tempMET.inputByUserPhase2();

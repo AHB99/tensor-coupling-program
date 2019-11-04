@@ -2054,13 +2054,13 @@ void MathExpression::evaluateChargeConjugates() {
 	}
 }
 
-void MathExpression::simplifyExpressionByDeltasPhase2() {
-	//Possible efficient redo
-	for (auto& MET : mathExpressionTerms) {
-		MET.simplifyTermByDeltasPhase2();
-	}
-	mathExpressionTerms.erase(std::remove_if(mathExpressionTerms.begin(), mathExpressionTerms.end(), isCoefficientZero), mathExpressionTerms.end());
-}
+//void MathExpression::simplifyExpressionByDeltasPhase2() {
+//	//Possible efficient redo
+//	for (auto& MET : mathExpressionTerms) {
+//		MET.simplifyTermByDeltasPhase2();
+//	}
+//	mathExpressionTerms.erase(std::remove_if(mathExpressionTerms.begin(), mathExpressionTerms.end(), isCoefficientZero), mathExpressionTerms.end());
+//}
 
 
 

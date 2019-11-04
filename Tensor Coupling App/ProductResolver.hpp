@@ -42,10 +42,12 @@ public:
 		return simplifiedTensorTerms;
 	}
 
+	static void setupPredeterminedLeviCivitaExpansions(MathExpression& pred2, MathExpression& pred1, MathExpression& pred0);
 
 private:
 	MathExpression fullyReduceTensorTermAtLocation(int location);
 	void erase0CoefficientReducibleTensorTerms();
+
 
 	std::vector<std::string> allIndexNames;
 	TensorTerm originalTensorTerm;

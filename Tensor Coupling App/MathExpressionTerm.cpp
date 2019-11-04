@@ -174,7 +174,8 @@ bool MathExpressionTerm::simplifyTermByDeltas() {
 	if (checkForCancellationDeltas()) {
 		return false;
 	}
-	renameIrreducibleTensorsByDeltas();
+	//renameIrreducibleTensorsByDeltas();
+	renameAllTensorsAndLevisByDeltas();
 	solveMatchingDeltas();
 	return true;
 }
@@ -1398,12 +1399,12 @@ void MathExpressionTerm::renameAllTensorsAndLevisByDeltas() {
 	}
 }
 
-bool MathExpressionTerm::simplifyTermByDeltasPhase2() {
-	sumOverDeltas();
-	if (checkForCancellationDeltas()) {
-		return false;
-	}
-	renameAllTensorsAndLevisByDeltas();
-	solveMatchingDeltas();
-	return true;
-}
+//bool MathExpressionTerm::simplifyTermByDeltasPhase2() {
+//	sumOverDeltas();
+//	if (checkForCancellationDeltas()) {
+//		return false;
+//	}
+//	renameAllTensorsAndLevisByDeltas();
+//	solveMatchingDeltas();
+//	return true;
+//}

@@ -1,5 +1,9 @@
 #include "ProductResolverPhase2.h"
+#include "ProductResolver.hpp"
 
+ProductResolverPhase2::ProductResolverPhase2(){
+	ProductResolver::setupPredeterminedLeviCivitaExpansions(predetermined2Match, predetermined1Match, predetermined0Match);
+}
 
 void ProductResolverPhase2::getInput() {
 	MathExpressionTerm tempMET;
@@ -109,9 +113,18 @@ void ProductResolverPhase2::evaluateChargeConjugates() {
 }
 
 void ProductResolverPhase2::simplifyDeltasOfEvaluatedTerms() {
-	finalMathExpression.simplifyExpressionByDeltasPhase2();
+	//finalMathExpression.simplifyExpressionByDeltasPhase2();
+	finalMathExpression.simplifyExpressionByDeltas();
 
 	//DEBUG
 	cout << "\nDeltas simplified: " << endl;
+	finalMathExpression.printPhase2();
+}
+
+void ProductResolverPhase2::simplifyLevisOfEvaluatedTerms() {
+	finalMathExpression.expandAllLeviCivitas(predetermined2Match,predetermined1Match,predetermined0Match);
+
+	//DEBUG
+	cout << "\nLevis simplified: " << endl;
 	finalMathExpression.printPhase2();
 }
