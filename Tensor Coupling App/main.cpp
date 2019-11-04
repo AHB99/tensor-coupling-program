@@ -63,6 +63,7 @@ int main() {
 	resolver.evaluateChargeConjugates();
 	resolver.simplifyDeltasOfEvaluatedTerms();
 	resolver.simplifyLevisOfEvaluatedTerms();
+	resolver.normalizeIrreducibleTensors();
 
 	//MathExpressionTerm tempMET;
 	//tempMET.inputByUserPhase2();

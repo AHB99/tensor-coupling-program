@@ -128,3 +128,11 @@ void ProductResolverPhase2::simplifyLevisOfEvaluatedTerms() {
 	cout << "\nLevis simplified: " << endl;
 	finalMathExpression.printPhase2();
 }
+
+void ProductResolverPhase2::normalizeIrreducibleTensors() {
+	finalMathExpression.normalizeAllIrreducibleTensors();
+
+	//DEBUG
+	cout << "\nNormalized: " << endl;
+	finalMathExpression.printPhase2();
+}
