@@ -933,7 +933,10 @@ void MathExpressionTerm::printPhase2() const {
 		}
 	}
 	//If no charge conjugate, ignore bbt section completely, because charge conjugate has evaluated it.
-
+	else {
+		//Also, if no conjugate, add 'i' from B = -i * PI
+		cout << "*i";
+	}
 	for (auto& matterTensor : matterTensors) {
 		cout << "*";
 		matterTensor.print();
@@ -1369,6 +1372,8 @@ void MathExpressionTerm::evaluateChargeConjugate() {
 
 	//Now entire bbt section is considered invalid
 	hasChargeConjugate = false;
+	//Upon removal, add -i
+	multiplyWithCoefficient(Coefficient(-1));
 }
 
 void MathExpressionTerm::renameAllTensorsAndLevisByDeltas() {
