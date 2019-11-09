@@ -60,6 +60,10 @@ public:
 
 	void deleteBbtByRange(int first, int last);
 
+	void clear() {
+		bbtChain.clear();
+	}
+
 private:
 	std::vector<Bbt> bbtChain;
 

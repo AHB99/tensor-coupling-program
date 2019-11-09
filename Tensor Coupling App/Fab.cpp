@@ -1,4 +1,6 @@
 #include "Fab.h"
+#include "UtilityFunctions.h"
+#include <algorithm>
 
 
 void Fab::print() const {
@@ -7,8 +9,8 @@ void Fab::print() const {
 		cout << index << " ";
 	}
 	cout << "}{" << field << "}";
-	if (charge != Uncharged) {
-		if (charge == Positive) {
+	if (charge != FabCharge::UNCHARGED) {
+		if (charge == FabCharge::POSITIVE) {
 			cout << "{+}";
 		}
 		else {
@@ -31,12 +33,22 @@ void Fab::inputByUser() {
 	int tempNum;
 	cin >> tempNum;
 	if (tempNum == 0) {
-		charge = Uncharged;
+		charge = FabCharge::UNCHARGED;
 	}
 	else if (tempNum == 1) {
-		charge = Positive;
+		charge = FabCharge::POSITIVE;
 	}
 	else if (tempNum == 2) {
-		charge = Negative;
+		charge = FabCharge::NEGATIVE;
 	}
+}
+
+int Fab::reorderIndices() {
+	int antisymmetricCoefficient = reorderIndicesAntisymmetrically(indices);
+	//Assuming symmetric
+	return 1;
+}
+
+bool Fab::doesIndexExist(const std::string& index) const {
+	return (std::find(indices.begin(), indices.end(), index) != indices.end());
 }

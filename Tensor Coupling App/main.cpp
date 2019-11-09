@@ -24,76 +24,33 @@ using std::endl;
 void phase1UI();
 
 int main() {
-
-	//MathExpressionTerm tempMET;
-	//tempMET.inputByUserPhase2();
-	//MathExpression tempExp;
-	//tempExp.addTerm(tempMET);
-	//cout << "Input:" << endl;
-	//tempExp.printPhase2();
-	//cout << "\nResult: " << endl;
-
-	//MathExpression generatedTerms = MathExpression::expandGammaAndInitialTensor(tempMET);
-	//generatedTerms.printPhase2();
-	//cout << "\nShifted form: " << endl;
-
-	//generatedTerms.shiftAllRightBbtChainBtOperatorsToLeft();
-	//generatedTerms.printPhase2();
-	//
-	//cout << "\nDelta summed form: " << endl;
-
-	//generatedTerms.simplifyExpressionWithReducibleTensorsByDeltas();
-	//generatedTerms.printPhase2();
-
-	//generatedTerms.simplifyExpressionByRenamingBbtAndReducibleTensors();
-	//cout << "\nRenaming simplified form: " << endl;
-	//generatedTerms.printPhase2();
+	//ProductResolverPhase2 resolver;
+	//resolver.getInput();
+	//resolver.generateRawTerms();
+	//resolver.shiftBbtInRawTerms();
+	//resolver.simplifyDeltasOfRawTerms();
+	//resolver.simplifyRawTermsByRenaming();
+	//resolver.reduceReducibleTensors();
+	//resolver.substitutePsiSpinors();
+	//resolver.reduceRightBbtChains();
+	//resolver.evaluateChargeConjugates();
+	//resolver.simplifyDeltasOfEvaluatedTerms();
+	//resolver.simplifyLevisOfEvaluatedTerms();
 
 
-	////***
-	ProductResolverPhase2 resolver;
-	resolver.getInput();
-	resolver.generateRawTerms();
-	resolver.shiftBbtInRawTerms();
-	resolver.simplifyDeltasOfRawTerms();
-	resolver.simplifyRawTermsByRenaming();
-	resolver.reduceReducibleTensors();
-	resolver.substitutePsiSpinors();
-	resolver.reduceRightBbtChains();
-	resolver.evaluateChargeConjugates();
-	resolver.simplifyDeltasOfEvaluatedTerms();
-	resolver.simplifyLevisOfEvaluatedTerms();
-	resolver.normalizeIrreducibleTensors();
+	////resolver.normalizeIrreducibleTensors(); //Normalize AFTER renaming
 
-	//MathExpressionTerm tempMET;
-	//tempMET.inputByUserPhase2();
-	//MathExpression tempExp;
-	//tempExp.addTerm(tempMET);
-	//cout << "Input:" << endl;
-	//tempExp.printPhase2();
+	MathExpressionTerm tempMET;
+	tempMET.inputByUserPhase2();
+	MathExpression tempExp;
+	tempExp.addTerm(tempMET);
+	cout << "Input:" << endl;
+	tempExp.printPhase2();
+	tempExp.sortIrreducibleAndMatterTensorsOfAllTerms();
+	tempExp.reorderIndicesOfAllTensorsOfAllTerms();
+	cout << "\nReordered:" << endl;
+	tempExp.printPhase2();
 
-	//tempMET.reduceRightBbtChainByEvaluation();
-	//cout << "Reduced: " << endl;
-	//tempMET.printPhase2();
-
-	//auto names = tempMET.getAllUniqueNamesOfTerm();
-	//for (auto& name : names) {
-	//	cout << name << " ";
-	//}
-	//cout << endl;
-
-	//cout << "Next Name: " << getNextNameGivenTerm(tempMET) << endl;
-
-
-
-
-
-	//if (tempMET.willBbtFormUsefulInteraction()) {
-	//	cout << "Useful!" << endl;
-	//}
-	//else {
-	//	cout << "Not useful!" << endl;
-	//}
 
     return 0;
 }

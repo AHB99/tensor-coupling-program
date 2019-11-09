@@ -24,6 +24,8 @@ using std::endl;
 
 class MathExpression;
 class TensorTerm;
+struct LocationOfIndexPojo;
+enum class TensorType;
 
 class MathExpressionTerm {
 public:
@@ -90,8 +92,8 @@ public:
 
 	void reorderIndicesOfIrreducibleTensorsAndLeviCivitas();
 
-	void performRenamesOnIrreducibleTensors(const std::vector<std::pair<std::string, std::string>> renameMap);
-	void performRenamesOnLeviCivita(const std::vector<std::pair<std::string, std::string>> renameMap);
+	void performRenamesOnIrreducibleTensors(const std::vector<std::pair<std::string, std::string>>& renameMap);
+	void performRenamesOnLeviCivita(const std::vector<std::pair<std::string, std::string>>& renameMap);
 
 
 	void addMathExpressionTermCoefficientToThisTerm(const MathExpressionTerm& otherMET);
@@ -178,10 +180,23 @@ public:
 	void reduceRightBbtChainByEvaluation();
 
 	void evaluateChargeConjugate();
+	const Fab& getFab() const {
+		return fab;
+	}
 
-	bool simplifyTermByDeltasPhase2();
-
-
+	//Renaming for Phase 2
+	void sortIrreducibleAndMatterTensors();
+	void reorderIndicesOfAllTensors();
+	const MatterTensor& getMatterTensorAt(int loc) const {
+		return matterTensors[loc];
+	}
+	int getNumberOfMatterTensors() const {
+		return matterTensors.size();
+	}
+	LocationOfIndexPojo getLocationOfFirstOccurenceOfIndex(const std::string& index) const;
+	void performRenamesOnMatterTensors(const std::vector<std::pair<std::string, std::string>>& renameMap);
+	void performRenamesOnFab(const std::vector<std::pair<std::string, std::string>>& renameMap);
+	void performRenamesPhase2(const std::vector<std::pair<std::string, std::string>>& renameMap);
 
 
 private:
@@ -289,5 +304,26 @@ public:
 	std::vector<Tensor> reducibleTensors;
 
 };
+
+enum class TensorType {
+	LEVI,
+	MATTER_TENSOR,
+	IRREDUCIBLE_TENSOR,
+	FAB
+};
+
+
+struct LocationOfIndexPojo {
+	TensorType tensorType = TensorType::IRREDUCIBLE_TENSOR;
+	int loc = 0;
+	bool isUpper = false;
+
+	LocationOfIndexPojo(TensorType tensorType, int loc, bool isUpper) {
+		this->tensorType = tensorType;
+		this->loc = loc;
+		this->isUpper = isUpper;
+	}
+};
+
 
 #endif

@@ -360,7 +360,7 @@ std::vector<std::string> MathExpressionTerm::getListOfAllIndices() const {
 	return result;
 }
 
-void MathExpressionTerm::performRenamesOnIrreducibleTensors(const std::vector<std::pair<std::string, std::string>> renameMap) {
+void MathExpressionTerm::performRenamesOnIrreducibleTensors(const std::vector<std::pair<std::string, std::string>>& renameMap) {
 	for (auto& tensor : irreducibleTensors) {
 		//Change each upper index
 		for (int i = 0; i < tensor.getNumberOfUpperIndices(); ++i) {
@@ -373,7 +373,7 @@ void MathExpressionTerm::performRenamesOnIrreducibleTensors(const std::vector<st
 	}
 }
 
-void MathExpressionTerm::performRenamesOnLeviCivita(const std::vector<std::pair<std::string, std::string>> renameMap) {
+void MathExpressionTerm::performRenamesOnLeviCivita(const std::vector<std::pair<std::string, std::string>>& renameMap) {
 	for (int i = 0; i < leviCivitas[0].getSize(); ++i) {
 		leviCivitas[0].changeIndexAtLocationTo(i, getNewNameFromRenameMap(leviCivitas[0].getNameAtLocation(i), renameMap));
 	}
@@ -385,8 +385,6 @@ void MathExpressionTerm::addMathExpressionTermCoefficientToThisTerm(const MathEx
 }
 
 bool MathExpressionTerm::simplifyTermBySymmetricAsymmetricProperty() {
-
-
 	for (auto& possiblySymmetricTensor : irreducibleTensors) {
 		//For every symmetric Tensor
 		if (possiblySymmetricTensor.getSymmetryState()) {
@@ -890,11 +888,6 @@ bool MathExpressionTerm::hasSameDeltas(const MathExpressionTerm& otherMET) const
 }
 
 void MathExpressionTerm::renameDeltas(std::vector<std::pair<std::string, std::string>>& renameMap) {
-	//for (auto& delta : deltas) {
-	//	delta.setUpperIndex(getNewNameFromRenameMap(delta.getUpperIndex(),renameMap));
-	//	delta.setLowerIndex(getNewNameFromRenameMap(delta.getLowerIndex(), renameMap));
-	//}
-
 	//Trial
 	for (auto& delta : deltas) {
 		std::string temp(getNewNameFromRenameMap(delta.getUpperIndex(), renameMap));
@@ -911,7 +904,9 @@ void MathExpressionTerm::renameDeltas(std::vector<std::pair<std::string, std::st
 //*********************Phase 2******************************
 void MathExpressionTerm::printPhase2() const {
 	print();
-	fab.print();
+	if (!fab.getIsNull()) {
+		fab.print();
+	}
 	if (hasChargeConjugate) {
 		if (spinors.size() != 2) {
 			cout << "<0|";
@@ -1372,6 +1367,8 @@ void MathExpressionTerm::evaluateChargeConjugate() {
 
 	//Now entire bbt section is considered invalid
 	hasChargeConjugate = false;
+	rightBbtChain.clear();
+	leftBbtChain.clear();
 	//Upon removal, add -i
 	multiplyWithCoefficient(Coefficient(-1));
 }
@@ -1404,12 +1401,81 @@ void MathExpressionTerm::renameAllTensorsAndLevisByDeltas() {
 	}
 }
 
-//bool MathExpressionTerm::simplifyTermByDeltasPhase2() {
-//	sumOverDeltas();
-//	if (checkForCancellationDeltas()) {
-//		return false;
-//	}
-//	renameAllTensorsAndLevisByDeltas();
-//	solveMatchingDeltas();
-//	return true;
-//}
+
+void MathExpressionTerm::sortIrreducibleAndMatterTensors() {
+	sortIrreducibleTensors();
+	std::stable_sort(matterTensors.begin(), matterTensors.end(), [](const MatterTensor& lhs, const MatterTensor& rhs) -> bool {return lhs.getNumberOfUpperIndices() < rhs.getNumberOfUpperIndices(); });
+	std::stable_sort(matterTensors.begin(), matterTensors.end(), [](const MatterTensor& lhs, const MatterTensor& rhs) -> bool {return lhs.getNumberOfLowerIndices() < rhs.getNumberOfLowerIndices(); });
+}
+
+void MathExpressionTerm::reorderIndicesOfAllTensors() {
+	int antisymmetricCoefficient = 1;
+	reorderIndicesOfIrreducibleTensorsAndLeviCivitas();
+	for (auto& matterTensor : matterTensors) {
+		antisymmetricCoefficient *= matterTensor.reorderIndices();
+	}
+	if (!fab.getIsNull()) {
+		antisymmetricCoefficient *= fab.reorderIndices();
+	}
+	multiplyWithCoefficient(Coefficient(antisymmetricCoefficient));
+}
+
+
+LocationOfIndexPojo MathExpressionTerm::getLocationOfFirstOccurenceOfIndex(const std::string& index) const {
+	if (leviCivitas.size() == 1) {
+		if (leviCivitas[0].doesIndexExist(index)) {
+			return LocationOfIndexPojo(TensorType::LEVI,0, false);
+		}
+	}
+	if (!fab.getIsNull()) {
+		if (fab.doesIndexExist(index)) {
+			return LocationOfIndexPojo(TensorType::FAB, 0, false);
+		}
+	}
+	for (int i = 0; i < irreducibleTensors.size(); ++i) {
+		if (irreducibleTensors[i].doesIndexExistInUpperZone(index)) {
+			return LocationOfIndexPojo(TensorType::IRREDUCIBLE_TENSOR, i, true);
+		}
+		else if (irreducibleTensors[i].doesIndexExistInLowerZone(index)){
+			return LocationOfIndexPojo(TensorType::IRREDUCIBLE_TENSOR, i, false);
+		}
+	}
+	for (int i = 0; i < matterTensors.size(); ++i) {
+		if (matterTensors[i].doesIndexExistInUpperZone(index)) {
+			return LocationOfIndexPojo(TensorType::MATTER_TENSOR, i, true);
+		}
+		else if (matterTensors[i].doesIndexExistInLowerZone(index)) {
+			return LocationOfIndexPojo(TensorType::MATTER_TENSOR, i, false);
+		}
+	}
+
+	return LocationOfIndexPojo(TensorType::IRREDUCIBLE_TENSOR, -1, false);
+}
+
+void MathExpressionTerm::performRenamesOnMatterTensors(const std::vector<std::pair<std::string, std::string>>& renameMap) {
+	for (auto& tensor : matterTensors) {
+		//Change each upper index
+		for (int i = 0; i < tensor.getNumberOfUpperIndices(); ++i) {
+			tensor.changeUpperIndexAtLoc(i, getNewNameFromRenameMap(tensor.getUpperIndexAt(i), renameMap));
+		}
+		//Change each lower index
+		for (int i = 0; i < tensor.getNumberOfLowerIndices(); ++i) {
+			tensor.changeLowerIndexAtLoc(i, getNewNameFromRenameMap(tensor.getLowerIndexAt(i), renameMap));
+		}
+	}
+}
+
+void MathExpressionTerm::performRenamesOnFab(const std::vector<std::pair<std::string, std::string>>& renameMap) {
+	for (int i = 0; i < fab.getNumberOfIndices(); ++i) {
+		fab.changeIndexAt(i, getNewNameFromRenameMap(fab.getIndexAt(i), renameMap));
+	}
+}
+
+void MathExpressionTerm::performRenamesPhase2(const std::vector<std::pair<std::string, std::string>>& renameMap) {
+	performRenamesOnIrreducibleTensors(renameMap);
+	if (getNumberOfLeviCivitas() == 1) {
+		performRenamesOnLeviCivita(renameMap);
+	}
+	performRenamesOnMatterTensors(renameMap);
+	performRenamesOnFab(renameMap);
+}

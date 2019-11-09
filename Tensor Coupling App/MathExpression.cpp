@@ -2054,15 +2054,55 @@ void MathExpression::evaluateChargeConjugates() {
 	}
 }
 
-//void MathExpression::simplifyExpressionByDeltasPhase2() {
-//	//Possible efficient redo
-//	for (auto& MET : mathExpressionTerms) {
-//		MET.simplifyTermByDeltasPhase2();
-//	}
-//	mathExpressionTerms.erase(std::remove_if(mathExpressionTerms.begin(), mathExpressionTerms.end(), isCoefficientZero), mathExpressionTerms.end());
-//}
+//NOTE: Fully ready for Phase 2
+void MathExpression::simplifyExpressionByRenamingPhase2() {
+	sortIrreducibleAndMatterTensorsOfAllTerms();
+	reorderIndicesOfAllTensorsOfAllTerms();
 
+	MathExpression finalResult;
+	for (int i = 0; i < mathExpressionTerms.size(); ++i) {
+		bool oneSuccessfulMatch = false;
+		//Check all terms in simplified expression that has been generated so far
+		for (int j = 0; j < finalResult.getSize(); ++j) {
 
+			if (areMathExpressionTermsSameStructurePhase2(finalResult.mathExpressionTerms[j], mathExpressionTerms[i])) { 
+				MathExpressionTerm renamedTerm;
+				//Attempt to rename the indices
+				bool successfulRename = performRenameIfValidIncludingPermutationsPhase2(finalResult.mathExpressionTerms[j], mathExpressionTerms[i], renamedTerm); //to remove
 
+				if (successfulRename) {
+					renamedTerm.reorderIndicesOfAllTensors();
 
+					//Technically, a successful rename, once ordered, should always be identical. But just to be safe
+					if (areMathExpressionTermsIdenticalPhase2(finalResult.mathExpressionTerms[j], renamedTerm)) {
+						finalResult.mathExpressionTerms[j].addMathExpressionTermCoefficientToThisTerm(renamedTerm);
+						oneSuccessfulMatch = true;
+						break;
+					}
+					//DEBUG
+					else {
+						//cout << "ERROR" << endl;
+					}
+				}
+			}
+		}
+		if (!oneSuccessfulMatch) {
+			finalResult.addTerm(mathExpressionTerms[i]);
+		}
+	}
+	(*this) = finalResult;
+	erase0Terms();
+}
+
+void MathExpression::sortIrreducibleAndMatterTensorsOfAllTerms() {
+	for (auto& MET : mathExpressionTerms) {
+		MET.sortIrreducibleAndMatterTensors();
+	}
+}
+
+void MathExpression::reorderIndicesOfAllTensorsOfAllTerms(){
+	for (auto& MET : mathExpressionTerms) {
+		MET.reorderIndicesOfAllTensors();
+	}
+}
 

@@ -79,6 +79,14 @@ public:
 		return result;
 	}
 
+	//Phase 2
+	const std::vector<std::string>& getUpperIndices() const {
+		return upperIndices;
+	}
+	const std::vector<std::string>& getLowerIndices() const {
+		return lowerIndices;
+	}
+
 
 private:
 	std::vector<std::string> upperIndices;

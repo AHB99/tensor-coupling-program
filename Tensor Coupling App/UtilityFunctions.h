@@ -93,7 +93,12 @@ void renameDeltaExpressionBasedOnLevis(int numOfMatches, const LeviCivita& first
 //******************************Phase 2***************************************
 
 std::string getNextNameGivenTerm(const MathExpressionTerm& met);
-
 long combination(int n, int r);
-
+int reorderIndicesAntisymmetrically(std::vector<std::string>& vec);
+bool areMathExpressionTermsSameStructurePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm);
+bool areMathExpressionTermsIdenticalPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm);
+bool performRenameIfValidPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, MathExpressionTerm& renamedTerm);
+bool performRenameIfValidIncludingPermutationsPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, MathExpressionTerm& renamedTerm);
+bool checkZoneRenameIssuePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, const std::pair<std::string, std::string>& rename);
+bool trySingleRenamePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, const std::vector<std::string>& blindVector, std::vector<std::pair<std::string, std::string>>& renameMap, const std::string& trialRename);
 #endif 

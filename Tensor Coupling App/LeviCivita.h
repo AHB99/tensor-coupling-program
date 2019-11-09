@@ -44,7 +44,7 @@ public:
 
 	int numberOfSimilarIndices(const LeviCivita& otherLevi) const;
 
-	std::vector<std::string> getIndices() const {
+	const std::vector<std::string>& getIndices() const {
 		return indices;
 	}
 

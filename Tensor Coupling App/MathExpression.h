@@ -105,8 +105,10 @@ public:
 	void reduceRightBbtChainsByEvaluation();
 	void evaluateChargeConjugates();
 
-	void simplifyExpressionByDeltasPhase2();
-
+	void simplifyExpressionByRenamingPhase2();
+	//Renaming funcs
+	void sortIrreducibleAndMatterTensorsOfAllTerms();
+	void reorderIndicesOfAllTensorsOfAllTerms();
 
 private:
 	//The Expression Substitutions from REFERENCE.pdf

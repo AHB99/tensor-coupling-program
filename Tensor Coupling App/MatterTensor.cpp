@@ -1,4 +1,6 @@
 #include "MatterTensor.h"
+#include "UtilityFunctions.h"
+#include <algorithm>
 
 void MatterTensor::print() const {
 	cout << "M";
@@ -54,4 +56,43 @@ bool MatterTensor::replaceIndexIfPresent(std::string oldIndex, std::string newIn
 		}
 	}
 	return false;
+}
+
+int MatterTensor::reorderIndices(){
+	return reorderIndicesAntisymmetrically(upperIndices) * reorderIndicesAntisymmetrically(lowerIndices);
+}
+
+//Ignores Transpose
+bool MatterTensor::isSameStructure(const MatterTensor& rhs) const{
+	if (upperIndices.size() != rhs.upperIndices.size()) return false;
+	if (lowerIndices.size() != rhs.lowerIndices.size()) return false;
+	return true;
+}
+
+bool MatterTensor::operator==(const MatterTensor& rhs) const
+{
+	if (!isSameStructure(rhs)) return false;
+	for (int i = 0; i < upperIndices.size(); ++i) { if (upperIndices[i] != rhs.upperIndices[i]) return false; }
+	for (int i = 0; i < lowerIndices.size(); ++i) { if (lowerIndices[i] != rhs.lowerIndices[i]) return false; }
+	return true;
+}
+
+bool MatterTensor::operator!=(const MatterTensor& rhs) const{
+	return !(operator==(rhs));
+}
+
+bool MatterTensor::doesIndexExistInUpperZone(const std::string& index) const{
+	return (std::find(upperIndices.begin(), upperIndices.end(), index) != upperIndices.end());
+}
+
+bool MatterTensor::doesIndexExistInLowerZone(const std::string& index) const{
+	return (std::find(lowerIndices.begin(), lowerIndices.end(), index) != lowerIndices.end());
+}
+
+void MatterTensor::changeUpperIndexAtLoc(int loc, const std::string& newName) {
+	upperIndices[loc] = newName;
+}
+
+void MatterTensor::changeLowerIndexAtLoc(int loc, const std::string& newName) {
+	lowerIndices[loc] = newName;
 }

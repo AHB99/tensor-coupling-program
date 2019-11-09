@@ -30,7 +30,44 @@ public:
 		return result;
 	}
 
+	int getNumberOfUpperIndices() const {
+		return upperIndices.size();
+	}
+
+	int getNumberOfLowerIndices() const {
+		return lowerIndices.size();
+	}
+
 	bool replaceIndexIfPresent(std::string oldIndex, std::string newIndex);
+
+	int reorderIndices();
+	bool isSameStructure(const MatterTensor& rhs) const;
+	bool operator==(const MatterTensor& rhs) const;
+	bool operator!=(const MatterTensor& rhs) const;
+	bool doesIndexExistInUpperZone(const std::string& index) const;
+	bool doesIndexExistInLowerZone(const std::string& index) const;
+	bool doesIndexExist(const std::string& index) const {
+		return (doesIndexExistInUpperZone(index) || doesIndexExistInLowerZone(index));
+	}
+
+	const std::vector<std::string>& getUpperIndices() const {
+		return upperIndices;
+	}
+	const std::vector<std::string>& getLowerIndices() const {
+		return lowerIndices;
+	}
+
+	std::string getUpperIndexAt(int loc) const {
+		return upperIndices[loc];
+	}
+	std::string getLowerIndexAt(int loc) const {
+		return lowerIndices[loc];
+	}
+
+
+	void changeUpperIndexAtLoc(int loc, const std::string& newName);
+	void changeLowerIndexAtLoc(int loc, const std::string& newName);
+
 
 private:
 	std::vector<std::string> upperIndices;
