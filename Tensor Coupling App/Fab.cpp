@@ -45,7 +45,9 @@ void Fab::inputByUser() {
 
 int Fab::reorderIndices() {
 	int antisymmetricCoefficient = reorderIndicesAntisymmetrically(indices);
-	//Assuming symmetric
+	if (charge == FabCharge::NEGATIVE && field == 3) {
+		return antisymmetricCoefficient;
+	}
 	return 1;
 }
 

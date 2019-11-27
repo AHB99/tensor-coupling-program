@@ -24,32 +24,31 @@ using std::endl;
 void phase1UI();
 
 int main() {
-	//ProductResolverPhase2 resolver;
-	//resolver.getInput();
-	//resolver.generateRawTerms();
-	//resolver.shiftBbtInRawTerms();
-	//resolver.simplifyDeltasOfRawTerms();
-	//resolver.simplifyRawTermsByRenaming();
-	//resolver.reduceReducibleTensors();
-	//resolver.substitutePsiSpinors();
-	//resolver.reduceRightBbtChains();
-	//resolver.evaluateChargeConjugates();
-	//resolver.simplifyDeltasOfEvaluatedTerms();
-	//resolver.simplifyLevisOfEvaluatedTerms();
+	ProductResolverPhase2 resolver;
+	resolver.getInput();
+	resolver.generateRawTerms();
+	resolver.shiftBbtInRawTerms();
+	resolver.simplifyDeltasOfRawTerms();
+	resolver.simplifyRawTermsByRenaming();
+	resolver.reduceReducibleTensors();
+	resolver.substitutePsiSpinors();
+	resolver.reduceRightBbtChains();
+	resolver.evaluateChargeConjugates();
+	resolver.simplifyDeltasOfEvaluatedTerms();
+	resolver.simplifyLevisOfEvaluatedTerms();
+	resolver.simplifyEvaluatedTermsByRenaming();
+	resolver.normalizeIrreducibleTensors(); //Normalize AFTER renaming
 
-
-	////resolver.normalizeIrreducibleTensors(); //Normalize AFTER renaming
-
-	MathExpressionTerm tempMET;
-	tempMET.inputByUserPhase2();
-	MathExpression tempExp;
-	tempExp.addTerm(tempMET);
-	cout << "Input:" << endl;
-	tempExp.printPhase2();
-	tempExp.sortIrreducibleAndMatterTensorsOfAllTerms();
-	tempExp.reorderIndicesOfAllTensorsOfAllTerms();
-	cout << "\nReordered:" << endl;
-	tempExp.printPhase2();
+	//MathExpressionTerm tempMET;
+	//tempMET.inputByUserPhase2();
+	//MathExpression tempExp;
+	//tempExp.addTerm(tempMET);
+	//cout << "Input:" << endl;
+	//tempExp.printPhase2();
+	//tempExp.sortIrreducibleAndMatterTensorsOfAllTerms();
+	//tempExp.reorderIndicesOfAllTensorsOfAllTerms();
+	//cout << "\nReordered:" << endl;
+	//tempExp.printPhase2();
 
 
     return 0;

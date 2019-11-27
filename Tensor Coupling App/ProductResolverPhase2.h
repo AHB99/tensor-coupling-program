@@ -23,7 +23,9 @@ public:
 	void evaluateChargeConjugates();
 	void simplifyDeltasOfEvaluatedTerms();
 	void simplifyLevisOfEvaluatedTerms();
+	void simplifyEvaluatedTermsByRenaming();
 	void normalizeIrreducibleTensors();
+
 
 
 	MathExpression initialInput;

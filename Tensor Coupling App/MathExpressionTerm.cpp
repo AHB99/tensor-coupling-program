@@ -1479,3 +1479,14 @@ void MathExpressionTerm::performRenamesPhase2(const std::vector<std::pair<std::s
 	performRenamesOnMatterTensors(renameMap);
 	performRenamesOnFab(renameMap);
 }
+
+void MathExpressionTerm::mergeFabs() {
+	//multiplyWithCoefficient(2);
+	if (fab.getField() == 1 || fab.getField() == 5) {
+		fab.setCharge(FabCharge::POSITIVE);
+	}
+	else if (fab.getField() == 3) {
+		fab.setCharge(FabCharge::NEGATIVE);
+	}
+
+}

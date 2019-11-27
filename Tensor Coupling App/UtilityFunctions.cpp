@@ -618,8 +618,9 @@ int reorderIndicesAntisymmetrically(std::vector<std::string>& vec) {
 bool areMathExpressionTermsSameStructurePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm)
 {
 	if (!areMathExpressionTermsSameStructure(sourceTerm, attemptTerm)) return false;
+	if (sourceTerm.getFab().getField() != attemptTerm.getFab().getField()) return false;
 	if (sourceTerm.getFab().getIsNull() != attemptTerm.getFab().getIsNull()) return false;
-	if (sourceTerm.getFab().getCharge() != attemptTerm.getFab().getCharge()) return false;
+	//sif (sourceTerm.getFab().getCharge() != attemptTerm.getFab().getCharge()) return false;
 	if (sourceTerm.getNumberOfMatterTensors() != attemptTerm.getNumberOfMatterTensors()) {
 		return false;
 	}

@@ -26,6 +26,13 @@ public:
 	FabCharge getCharge() const {
 		return charge;
 	}
+	void setCharge(FabCharge inpCharge) {
+		charge = inpCharge;
+	}
+	int getField() const {
+		return field;
+	}
+	
 	int getNumberOfIndices() const {
 		return indices.size();
 	}

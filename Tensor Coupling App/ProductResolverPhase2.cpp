@@ -129,6 +129,15 @@ void ProductResolverPhase2::simplifyLevisOfEvaluatedTerms() {
 	finalMathExpression.printPhase2();
 }
 
+//TODO: Amgbiguity not handled
+void ProductResolverPhase2::simplifyEvaluatedTermsByRenaming() {
+	finalMathExpression.simplifyExpressionByRenamingPhase2();
+
+	//DEBUG
+	cout << "\nTerms simplified by renaming: " << endl;
+	finalMathExpression.printPhase2();
+}
+
 void ProductResolverPhase2::normalizeIrreducibleTensors() {
 	finalMathExpression.normalizeAllIrreducibleTensors();
 

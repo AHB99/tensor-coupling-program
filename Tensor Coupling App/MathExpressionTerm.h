@@ -198,7 +198,7 @@ public:
 	void performRenamesOnFab(const std::vector<std::pair<std::string, std::string>>& renameMap);
 	void performRenamesPhase2(const std::vector<std::pair<std::string, std::string>>& renameMap);
 
-
+	void mergeFabs();
 private:
 	//Helper for Levi grouping
 	void moveLeviAtLocationToLeft(int location);

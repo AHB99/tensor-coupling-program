@@ -2075,7 +2075,14 @@ void MathExpression::simplifyExpressionByRenamingPhase2() {
 
 					//Technically, a successful rename, once ordered, should always be identical. But just to be safe
 					if (areMathExpressionTermsIdenticalPhase2(finalResult.mathExpressionTerms[j], renamedTerm)) {
+						//First, add terms together, then merge fab
 						finalResult.mathExpressionTerms[j].addMathExpressionTermCoefficientToThisTerm(renamedTerm);
+						
+						if (!finalResult.mathExpressionTerms[j].getFab().getIsNull()) {
+							//Since no sign swapping during uncharged, and Structure Check ensures same charge, always valid
+							finalResult.mathExpressionTerms[j].mergeFabs();
+						}
+						
 						oneSuccessfulMatch = true;
 						break;
 					}
