@@ -19,6 +19,23 @@ void Fab::print() const {
 	}
 }
 
+void Fab::printLatex() const{
+	cout << "F_{";
+	for (auto& index : indices) {
+		cout << index;
+	}
+	cout << "}^{(" << getGenericPhysicalFieldFromEncodedField(field);
+	if (charge != FabCharge::UNCHARGED) {
+		if (charge == FabCharge::POSITIVE) {
+			cout << "+";
+		}
+		else {
+			cout << "-";
+		}
+	}
+	cout << ")}";
+}
+
 void Fab::inputByUser() {
 	cout << "Enter fab indices till /: ";
 	std::string tempString;
@@ -45,9 +62,17 @@ void Fab::inputByUser() {
 
 int Fab::reorderIndices() {
 	int antisymmetricCoefficient = reorderIndicesAntisymmetrically(indices);
-	if (charge == FabCharge::NEGATIVE && field == 3) {
+
+	//if (charge == FabCharge::NEGATIVE && field == 3) {
+	//	return antisymmetricCoefficient;
+	//}
+
+	//TRIAL CHANGE: Seeing if Field 3 is antisymmetric always
+	
+	if (field == 3) {
 		return antisymmetricCoefficient;
 	}
+
 	return 1;
 }
 

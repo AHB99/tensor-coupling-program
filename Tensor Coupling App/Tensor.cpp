@@ -27,7 +27,7 @@ void Tensor::printTensor() const {
 	cout << ">";
 }
 
-void Tensor::printTensorAsLatex() {
+void Tensor::printLatex() const {
 	cout << label << "_{";
 	for (int i = 0; i < indices.size(); ++i) {
 		if (indices[i].second == 1) {

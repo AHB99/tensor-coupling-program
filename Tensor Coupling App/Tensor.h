@@ -20,7 +20,7 @@ public:
 	void setLabel(std::string inpLabel);
 	int getNumberOfIndices() const;
 	void printTensor() const;
-	void printTensorAsLatex();
+	void printLatex() const;
 	//Assuming bars left, unbars right.
 	int getUnbarredZoneLocation();
 

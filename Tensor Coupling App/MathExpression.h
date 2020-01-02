@@ -86,6 +86,7 @@ public:
 
 	//Phase 2
 	void printPhase2() const;
+	void printLatexPhase2() const;
 
 	static MathExpression expandGammaAndInitialTensor(const MathExpressionTerm& met);
 	void shiftAllRightBbtChainBtOperatorsToLeft();

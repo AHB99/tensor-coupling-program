@@ -740,4 +740,22 @@ bool trySingleRenamePhase2(const MathExpressionTerm& sourceTerm, const MathExpre
 	return true;
 }
 
+std::string getGenericPhysicalFieldFromEncodedField(int field) {
+	if (field == 1) {
+		return "10";
+	}
+	else if (field == 2) {
+		return "45";
+	}
+	else if (field == 3) {
+		return "120";
+	}
+	else if (field == 4) {
+		return "210";
+	}
+	else {	
+		return "126";
+	}
+}
+
 

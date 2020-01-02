@@ -7,6 +7,12 @@ void BbtChain::print() const {
 	}
 }
 
+void BbtChain::printLatex() const {
+	for (auto& bbt : bbtChain) {
+		bbt.printLatex();
+	}
+}
+
 void BbtChain::inputByUser() {
 	cout << "Number of bbt: ";
 	int tempNum;

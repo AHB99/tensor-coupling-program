@@ -1940,6 +1940,16 @@ void MathExpression::printPhase2() const {
 	}
 }
 
+void MathExpression::printLatexPhase2() const {
+	if (mathExpressionTerms.empty()) {
+		cout << 0 << endl;
+	}
+	for (auto& MET : mathExpressionTerms) {
+		MET.printLatexPhase2();
+		cout << " ";
+	}
+}
+
 MathExpression MathExpression::expandGammaAndInitialTensor(const MathExpressionTerm& originalTerm) {
 	// We perform all permutations using binary counting. Start with calculating the end point...
 	// Number of bits in the end = number of subscripts.
@@ -2080,7 +2090,9 @@ void MathExpression::simplifyExpressionByRenamingPhase2() {
 						
 						if (!finalResult.mathExpressionTerms[j].getFab().getIsNull()) {
 							//Since no sign swapping during uncharged, and Structure Check ensures same charge, always valid
-							finalResult.mathExpressionTerms[j].mergeFabs();
+							
+							//DEBUG: Removed for testing
+							//finalResult.mathExpressionTerms[j].mergeFabs();
 						}
 						
 						oneSuccessfulMatch = true;
@@ -2098,6 +2110,7 @@ void MathExpression::simplifyExpressionByRenamingPhase2() {
 		}
 	}
 	(*this) = finalResult;
+	
 	erase0Terms();
 }
 

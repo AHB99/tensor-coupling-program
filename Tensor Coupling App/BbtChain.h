@@ -17,6 +17,8 @@ struct BbtChainCounter {
 class BbtChain {
 public:
 	void print() const;
+	void printLatex() const;
+
 	void inputByUser();
 
 	//To reuse existing simplification code

@@ -815,6 +815,30 @@ void MathExpressionTerm::substituteNormalizedTensorFor5Index2Up3Down(int irreduc
 	irreducibleTensors.erase(irreducibleTensors.begin() + irreducibleTensorLocation);
 }
 
+//TEST: New function
+void MathExpressionTerm::substituteNormalizedTensorFor5Index0Up3Down(int irreducibleTensorLocation) {
+	NormalizedTensor tempNormalizedTensor(irreducibleTensors[irreducibleTensorLocation].getSymmetryState(), irreducibleTensors[irreducibleTensorLocation].getField());
+	normalizedTensors.push_back(tempNormalizedTensor);
+
+	std::vector<std::string> newNames{};
+	newNames.push_back(getNextNameGivenTerm(*this));
+	normalizedTensors[0].addUpperIndex(newNames[0]);
+	newNames.push_back(getNextNameGivenTerm(*this));
+	normalizedTensors[0].addUpperIndex(newNames[1]);
+
+	LeviCivita tempLevi(false);
+	tempLevi.addIndex(irreducibleTensors[irreducibleTensorLocation].getLowerIndexAt(0));
+	tempLevi.addIndex(irreducibleTensors[irreducibleTensorLocation].getLowerIndexAt(1));
+	tempLevi.addIndex(irreducibleTensors[irreducibleTensorLocation].getLowerIndexAt(2));
+	tempLevi.addIndex(newNames[0]);
+	tempLevi.addIndex(newNames[1]);
+
+	
+	leviCivitas.push_back(tempLevi);
+	coefficient *= Coefficient(1, 15, 30);
+	irreducibleTensors.erase(irreducibleTensors.begin() + irreducibleTensorLocation);
+}
+
 void MathExpressionTerm::substituteNormalizedTensorFor5Index(int irreducibleTensorLocation) {
 	if ((irreducibleTensors[irreducibleTensorLocation].getNumberOfUpperIndices() == 0) && (irreducibleTensors[irreducibleTensorLocation].getNumberOfLowerIndices() == 0) && (irreducibleTensors[irreducibleTensorLocation].getBarState() == 0)) {
 		substituteNormalizedTensorFor5Index0Up0DownUnbarred(irreducibleTensorLocation);
@@ -845,6 +869,10 @@ void MathExpressionTerm::substituteNormalizedTensorFor5Index(int irreducibleTens
 	}
 	else if ((irreducibleTensors[irreducibleTensorLocation].getNumberOfUpperIndices() == 2) && (irreducibleTensors[irreducibleTensorLocation].getNumberOfLowerIndices() == 3)) {
 		substituteNormalizedTensorFor5Index2Up3Down(irreducibleTensorLocation);
+	}
+	//newly added
+	else if ((irreducibleTensors[irreducibleTensorLocation].getNumberOfUpperIndices() == 0) && (irreducibleTensors[irreducibleTensorLocation].getNumberOfLowerIndices() == 3)) {
+		substituteNormalizedTensorFor5Index0Up3Down(irreducibleTensorLocation);
 	}
 }
 
@@ -942,6 +970,57 @@ void MathExpressionTerm::printPhase2() const {
 	}
 	cout << endl;
 
+}
+
+void MathExpressionTerm::printLatexPhase2() const {
+	coefficient.printLatex();
+	if (!fab.getIsNull()) {
+		fab.printLatex();
+	}
+	if (hasChargeConjugate) {
+		if (spinors.size() != 2) {
+			cout << "<0|";
+		}
+		else {
+			spinors[0].printLatex();
+		}
+		leftBbtChain.printLatex();
+		if (hasChargeConjugate) {
+			cout << "B";
+		}
+		gammaTensor.printLatex();
+		rightBbtChain.printLatex();
+		if (spinors.size() != 2) {
+			cout << "|0>";
+		}
+		else {
+			spinors[1].printLatex();
+		}
+	}
+	//If no charge conjugate, ignore bbt section completely, because charge conjugate has evaluated it.
+	else {
+		//Also, if no conjugate, add 'i' from B = -i * PI
+		cout << "i";
+	}
+	for (auto& delta : deltas) {
+		delta.printLatex();
+	}
+	for (auto& levi : leviCivitas) {
+		levi.printLatex();
+	}
+	for (auto& irreducibleTensor : irreducibleTensors) {
+		irreducibleTensor.printLatex();
+	}
+	for (auto& normalizedTensor : normalizedTensors) {
+		normalizedTensor.printLatex();
+	}
+	for (auto& matterTensor : matterTensors) {
+		matterTensor.printLatex();
+	}
+	for (auto& reducibleTensor : reducibleTensors) {
+		reducibleTensor.printLatex();
+	}
+	cout << endl;
 }
 
 void MathExpressionTerm::inputByUserPhase2() {

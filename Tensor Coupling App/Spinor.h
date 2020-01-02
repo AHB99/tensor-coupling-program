@@ -10,6 +10,8 @@ using std::endl;
 class Spinor {
 public:
 	void print() const;
+	void printLatex() const;
+
 	void inputByUser();
 	void setIsLeft(bool inpIsLeft) {
 		isLeft = inpIsLeft;

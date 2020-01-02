@@ -23,6 +23,28 @@ void MatterTensor::print() const {
 	}
 }
 
+void MatterTensor::printLatex() const {
+	cout << "M";
+
+	if (!upperIndices.empty()) {
+		cout << "^{";
+		for (auto& index : upperIndices) {
+			cout << index;
+		}
+		if (isTranspose) { cout << " T";}
+		cout << "}";
+	}
+	else if (isTranspose) {cout << "^{T}";}
+	
+	if (!lowerIndices.empty()) {
+		cout << "_{";
+		for (auto& index : lowerIndices) {
+			cout << index;
+		}
+		cout << "}";
+	}
+}
+
 void MatterTensor::inputByUser() {
 	std::string tempString;
 	cout << "Upper indices till '/': ";

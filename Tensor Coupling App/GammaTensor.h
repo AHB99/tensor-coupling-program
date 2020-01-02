@@ -11,6 +11,8 @@ using std::endl;
 class GammaTensor {
 public:
 	void print() const;
+	void printLatex() const;
+
 	void inputByUser();
 
 	std::vector<std::string> getIndices() const {

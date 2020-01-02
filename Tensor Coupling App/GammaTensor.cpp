@@ -9,6 +9,15 @@ void GammaTensor::print() const {
 	cout << "}";
 }
 
+void GammaTensor::printLatex() const {
+	if (isNull) return;
+	cout << "\\Gamma_{";
+	for (auto& index : indices) {
+		cout << index;
+	}
+	cout << "}";
+}
+
 void GammaTensor::inputByUser() {
 	cout << "Gamma Null? (0 = no, 1 = yes): ";
 	cin >> isNull;

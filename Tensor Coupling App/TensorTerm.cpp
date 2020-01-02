@@ -63,7 +63,7 @@ void TensorTerm::printTensorTermAsLatex() {
 		cout << coefficient;
 	}
 	for (auto& tensor : tensors) {
-		tensor.printTensorAsLatex();
+		tensor.printLatex();
 	}
 
 }

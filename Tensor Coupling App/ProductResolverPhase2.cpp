@@ -13,6 +13,8 @@ void ProductResolverPhase2::getInput() {
 	//DEBUG
 	cout << "Input:" << endl;
 	initialInput.printPhase2();
+	initialInput.printLatexPhase2();
+
 }
 
 void ProductResolverPhase2::generateRawTerms() {
@@ -144,4 +146,6 @@ void ProductResolverPhase2::normalizeIrreducibleTensors() {
 	//DEBUG
 	cout << "\nNormalized: " << endl;
 	finalMathExpression.printPhase2();
+	finalMathExpression.printLatexPhase2();
+
 }

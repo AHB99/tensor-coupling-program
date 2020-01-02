@@ -15,7 +15,9 @@ enum class FabCharge {
 
 class Fab {
 public:
-	void print() const ;
+	void print() const;
+	void printLatex() const;
+
 	void inputByUser();
 	const std::vector<std::string>& getIndices() const {
 		return indices;

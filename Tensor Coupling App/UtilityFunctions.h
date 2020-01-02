@@ -101,4 +101,5 @@ bool performRenameIfValidPhase2(const MathExpressionTerm& sourceTerm, const Math
 bool performRenameIfValidIncludingPermutationsPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, MathExpressionTerm& renamedTerm);
 bool checkZoneRenameIssuePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, const std::pair<std::string, std::string>& rename);
 bool trySingleRenamePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, const std::vector<std::string>& blindVector, std::vector<std::pair<std::string, std::string>>& renameMap, const std::string& trialRename);
+std::string getGenericPhysicalFieldFromEncodedField(int field);
 #endif 

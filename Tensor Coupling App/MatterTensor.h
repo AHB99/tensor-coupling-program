@@ -12,6 +12,8 @@ using std::endl;
 class MatterTensor {
 public:
 	void print() const;
+	void printLatex() const;
+
 	void inputByUser();
 	void addUpperIndex(const std::string& index) {
 		upperIndices.push_back(index);

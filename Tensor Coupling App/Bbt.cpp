@@ -6,6 +6,12 @@ void Bbt::print() const {
 	cout << "{" << index << "}";
 }
 
+void Bbt::printLatex() const {
+	cout << "b";
+	if (dagger) { cout << "^{\\dagger}"; }
+	cout << "_{" << index << "}";
+}
+
 void Bbt::inputByUser() {
 	cout << "Index : ";
 	cin >> index;

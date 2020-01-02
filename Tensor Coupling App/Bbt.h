@@ -15,6 +15,8 @@ public:
 		dagger = inpDagger;
 	}
 	void print() const;
+	void printLatex() const;
+
 	void inputByUser() ;
 	std::string getName() const {
 		return index;

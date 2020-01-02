@@ -20,6 +20,26 @@ void Spinor::print() const {
 	}
 }
 
+void Spinor::printLatex() const {
+	if (isLeft) {
+		cout << "<";
+	}
+	else {
+		cout << "|";
+	}
+	cout << "\\Psi";
+	if (isStarred) {
+		cout << "^{*}";
+	}
+	cout << "_{" << index << "}";
+	if (isLeft) {
+		cout << "|";
+	}
+	else {
+		cout << ">";
+	}
+}
+
 void Spinor::inputByUser() {
 	cout << "Enter index: ";
 	cin >> index;

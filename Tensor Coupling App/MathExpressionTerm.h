@@ -118,6 +118,7 @@ public:
 
 	//Phase 2
 	void printPhase2() const;
+	void printLatexPhase2() const;
 	void inputByUserPhase2();
 
 	void fillBbtDaggersAndReducibleTensorBarsBasedOnBinaryMarker(std::string indexName, int binaryMarker);
@@ -268,6 +269,7 @@ private:
 	void substituteNormalizedTensorFor5Index2Up1Down(int irreducibleTensorLocation);
 	void substituteNormalizedTensorFor5Index3Up2Down(int irreducibleTensorLocation);
 	void substituteNormalizedTensorFor5Index2Up3Down(int irreducibleTensorLocation);
+	void substituteNormalizedTensorFor5Index0Up3Down(int irreducibleTensorLocation);
 	void substituteNormalizedTensorFor5Index(int irreducibleTensorLocation);
 
 	//Member variables
