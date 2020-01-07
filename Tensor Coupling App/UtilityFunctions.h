@@ -96,6 +96,7 @@ std::string getNextNameGivenTerm(const MathExpressionTerm& met);
 std::string getNextNameGivenNamePhase2(const std::string& oldName);
 long combination(int n, int r);
 int reorderIndicesAntisymmetrically(std::vector<std::string>& vec);
+bool isPairOfGenerationAndRegularIndices(const std::string& firstIndex, const std::string& secondIndex);
 bool areMathExpressionTermsSameStructurePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm);
 bool areMathExpressionTermsIdenticalPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm);
 bool performRenameIfValidPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, MathExpressionTerm& renamedTerm);

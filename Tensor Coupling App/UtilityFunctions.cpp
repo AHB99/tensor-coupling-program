@@ -564,15 +564,17 @@ bool compareIndexStrengths(const std::string& lhs, const std::string& rhs) {
 
 
 //**************** Phase 2 **************************************
+//Leaving 'a' and 'b' for generation indices
+
 std::string getNextNameGivenTerm(const MathExpressionTerm& met) {
 	std::vector<std::string> allNames{ met.getAllUniqueNamesOfTerm() };
 	if (allNames.empty()) return "i";
 	std::sort(allNames.begin(), allNames.end(), compareIndexStrengths);
 	for (auto iter = allNames.begin(); iter != (--(allNames.end())); ++iter) {
 		std::string nextPossibleName;
-		//Wrap letters to a
+		//Wrap letters to c 
 		if (*iter == "z") {
-			nextPossibleName = "a";
+			nextPossibleName = "c";
 		}
 		else {
 			nextPossibleName = std::string{ (char)((*iter)[0] + 1) };
@@ -586,7 +588,7 @@ std::string getNextNameGivenTerm(const MathExpressionTerm& met) {
 	//If no gap found, return next after last
 	//Wrap letters to a
 	if (allNames.back() == "z") {
-		return "a";
+		return "c";
 	}
 	else {
 		return std::string{ (char)((allNames.back()[0]) + 1) };
@@ -594,10 +596,11 @@ std::string getNextNameGivenTerm(const MathExpressionTerm& met) {
 }
 
 //To use when full MET is not available (because it's being "created" during substitution step)
+//Leaving 'a' and 'b' for generation indices
 std::string getNextNameGivenNamePhase2(const std::string& oldName) {
 	char charOldName = oldName[0];
 	if (charOldName == 'z') {
-		charOldName = 'a';
+		charOldName = 'c';
 	}
 	else {
 		charOldName++;
@@ -620,7 +623,11 @@ int reorderIndicesAntisymmetrically(std::vector<std::string>& vec) {
 		for (int i = 0; i < ((int)vec.size()) - 1; ++i) {
 			if ( vec[i] > vec[i+1]) {
 				std::swap(vec[i],vec[i+1]);
-				coefficient *= -1;
+
+				//Based on FIXED assumption that 'a' and 'b' are strictly generation indices
+				if (!isPairOfGenerationAndRegularIndices(vec[i], vec[i + 1])) {
+					coefficient *= -1;
+				}
 				modified = true;
 			}
 
@@ -628,6 +635,17 @@ int reorderIndicesAntisymmetrically(std::vector<std::string>& vec) {
 	}
 	return coefficient;
 }
+
+//FIXED assumption that 'a' and 'b' are only generation indices
+//XOR between first and second
+bool isPairOfGenerationAndRegularIndices(const std::string& firstIndex, const std::string& secondIndex) {
+	bool firstIndexIsGeneration = (firstIndex == "a" || firstIndex == "b");
+	bool secondIndexIsGeneration = (secondIndex == "a" || secondIndex == "b");
+
+	return ((firstIndexIsGeneration && !secondIndexIsGeneration)
+			|| (!firstIndexIsGeneration && secondIndexIsGeneration));
+}
+
 
 bool areMathExpressionTermsSameStructurePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm)
 {
