@@ -127,7 +127,15 @@ void MathExpressionTerm::sumOverDeltas() {
 bool MathExpressionTerm::checkForCancellationDeltas() {
 	for (int i = 0; i < deltas.size(); ++i) {
 		for (int j = 0; j < irreducibleTensors.size(); ++j) {
-			if (deltas[i].isCancellationDeltaForTensor(irreducibleTensors[j])) {
+			if (deltas[i].isCancellationDeltaForIrreducibleTensor(irreducibleTensors[j])) {
+				coefficient = 0;
+				return true;
+			}
+		}
+	}
+	for (int i = 0; i < deltas.size(); ++i) {
+		for (int j = 0; j < matterTensors.size(); ++j) {
+			if (deltas[i].isCancellationDeltaForMatterTensor(matterTensors[j])) {
 				coefficient = 0;
 				return true;
 			}

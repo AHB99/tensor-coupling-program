@@ -63,7 +63,14 @@ bool Delta::sumIndicesIfPossible(const Delta& otherDelta) {
 	}
 }
 
-bool Delta::isCancellationDeltaForTensor(const IrreducibleTensor& tensor) const {
+bool Delta::isCancellationDeltaForIrreducibleTensor(const IrreducibleTensor& tensor) const {
+	if (tensor.doesIndexExist(upperIndex) && tensor.doesIndexExist(lowerIndex)) {
+		return true;
+	}
+	return false;
+}
+
+bool Delta::isCancellationDeltaForMatterTensor(const MatterTensor& tensor) const {
 	if (tensor.doesIndexExist(upperIndex) && tensor.doesIndexExist(lowerIndex)) {
 		return true;
 	}
