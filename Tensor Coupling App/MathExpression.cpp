@@ -296,7 +296,7 @@ void MathExpression::setSubstitutionFor3Index1Duplicate2Bar(Tensor& sourceReduci
 	tempIrrTensor.addLowerIndex(shiftedTensor.getIndexNameAt(2));
 
 	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
+	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient() * -1);
 	addTerm(tempMET);
 }
 
@@ -1307,19 +1307,27 @@ void MathExpression::setSubstitutionFor5Index5Bar(Tensor& sourceReducibleTensor)
 	addTerm(tempMET);
 }
 
-void MathExpression::setSubstitutionFor5Index1Duplicate1Bar(Tensor& sourceReducibleTensor) {
+void MathExpression::setSubstitutionFor5Index1Duplicate1Bar(Tensor& sourceReducibleTensor, const std::string& latestName) {
 	MathExpressionTerm tempMET;
 	IrreducibleTensor tempIrrTensor(false, 5);
+	LeviCivita tempLevi(true);
 
 	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
 	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
 
-	tempIrrTensor.addUpperIndex(shiftedTensor.getIndexNameAt(2));
-	tempIrrTensor.addUpperIndex(shiftedTensor.getIndexNameAt(3));
-	tempIrrTensor.addUpperIndex(shiftedTensor.getIndexNameAt(4));
+	tempLevi.addIndex(shiftedTensor.getIndexNameAt(2));
+	tempLevi.addIndex(shiftedTensor.getIndexNameAt(3));
+	tempLevi.addIndex(shiftedTensor.getIndexNameAt(4));
+	std::string firstNewName = getNextNameGivenNamePhase2(latestName);
+	std::string secondNewName = getNextNameGivenNamePhase2(firstNewName);
+	tempLevi.addIndex(firstNewName);
+	tempLevi.addIndex(secondNewName);
 
+	tempIrrTensor.addLowerIndex(firstNewName);
+	tempIrrTensor.addLowerIndex(secondNewName);
 
 	tempMET.addIrreducibleTensor(tempIrrTensor);
+	tempMET.addLeviCivita(tempLevi);
 	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
 	addTerm(tempMET);
 }
@@ -1410,20 +1418,28 @@ void MathExpression::setSubstitutionFor5Index1Duplicate3Bar(Tensor& sourceReduci
 	multiplyByCoefficient(shiftedTensorTerm.getCoefficient());
 }
 
-void MathExpression::setSubstitutionFor5Index1Duplicate4Bar(Tensor& sourceReducibleTensor) {
+void MathExpression::setSubstitutionFor5Index1Duplicate4Bar(Tensor& sourceReducibleTensor, const std::string& latestName) {
 	MathExpressionTerm tempMET;
 	IrreducibleTensor tempIrrTensor(false, 5);
+	LeviCivita tempLevi(false);
 
 	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
 	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
 
-	tempIrrTensor.addLowerIndex(shiftedTensor.getIndexNameAt(2));
-	tempIrrTensor.addLowerIndex(shiftedTensor.getIndexNameAt(3));
-	tempIrrTensor.addLowerIndex(shiftedTensor.getIndexNameAt(4));
+	tempLevi.addIndex(shiftedTensor.getIndexNameAt(2));
+	tempLevi.addIndex(shiftedTensor.getIndexNameAt(3));
+	tempLevi.addIndex(shiftedTensor.getIndexNameAt(4));
+	std::string firstNewName = getNextNameGivenNamePhase2(latestName);
+	std::string secondNewName = getNextNameGivenNamePhase2(firstNewName);
+	tempLevi.addIndex(firstNewName);
+	tempLevi.addIndex(secondNewName);
 
+	tempIrrTensor.addUpperIndex(firstNewName);
+	tempIrrTensor.addUpperIndex(secondNewName);
 
 	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient() * -1);
+	tempMET.addLeviCivita(tempLevi);
+	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
 	addTerm(tempMET);
 }
 
@@ -1469,7 +1485,7 @@ void MathExpression::setSubstitutionFor5Index(Tensor& sourceReducibleTensor, std
 	}
 	else if (numOfDuplicatedIndices == 1) {
 		if (numOfBarredIndices == 1) {
-			setSubstitutionFor5Index1Duplicate1Bar(sourceReducibleTensor);
+			setSubstitutionFor5Index1Duplicate1Bar(sourceReducibleTensor, latestName);
 		}
 		else if (numOfBarredIndices == 2) {
 			setSubstitutionFor5Index1Duplicate2Bar(sourceReducibleTensor);
@@ -1478,7 +1494,7 @@ void MathExpression::setSubstitutionFor5Index(Tensor& sourceReducibleTensor, std
 			setSubstitutionFor5Index1Duplicate3Bar(sourceReducibleTensor);
 		}
 		else if (numOfBarredIndices == 4) {
-			setSubstitutionFor5Index1Duplicate4Bar(sourceReducibleTensor);
+			setSubstitutionFor5Index1Duplicate4Bar(sourceReducibleTensor, latestName);
 		}
 	}
 	else  if (numOfDuplicatedIndices == 0) {

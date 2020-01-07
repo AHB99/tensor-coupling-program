@@ -159,10 +159,10 @@ private:
 	void setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor);
 	void setSubstitutionFor5Index4Bar(Tensor& sourceReducibleTensor, std::string& latestName);
 	void setSubstitutionFor5Index5Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor5Index1Duplicate1Bar(Tensor& sourceReducibleTensor);
+	void setSubstitutionFor5Index1Duplicate1Bar(Tensor& sourceReducibleTensor, const std::string& latestName);
 	void setSubstitutionFor5Index1Duplicate2Bar(Tensor& sourceReducibleTensor);
 	void setSubstitutionFor5Index1Duplicate3Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor5Index1Duplicate4Bar(Tensor& sourceReducibleTensor);
+	void setSubstitutionFor5Index1Duplicate4Bar(Tensor& sourceReducibleTensor, const std::string& latestName);
 	void setSubstitutionFor5Index2Duplicate2Bar(Tensor& sourceReducibleTensor);
 	void setSubstitutionFor5Index2Duplicate3Bar(Tensor& sourceReducibleTensor);
 

@@ -593,6 +593,20 @@ std::string getNextNameGivenTerm(const MathExpressionTerm& met) {
 	}
 }
 
+//To use when full MET is not available (because it's being "created" during substitution step)
+std::string getNextNameGivenNamePhase2(const std::string& oldName) {
+	char charOldName = oldName[0];
+	if (charOldName == 'z') {
+		charOldName = 'a';
+	}
+	else {
+		charOldName++;
+	}
+	std::string result;
+	result.push_back(charOldName);
+	return result;
+}
+
 long combination(int n, int r) {
 	return factorial(n) / (factorial(r) * factorial(n - r));
 }
