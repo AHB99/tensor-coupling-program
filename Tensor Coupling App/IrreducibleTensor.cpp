@@ -254,3 +254,24 @@ std::string IrreducibleTensor::getPhysicalFieldFromEncodedField() const {
 		}
 	}
 }
+
+bool IrreducibleTensor::hasAtleast2MatchingIndices(const MatterTensor& otherMatterTensor) const {
+	//Check upper indices
+	int matches = 0;
+	for (auto& sourceUpperIndex : upperIndices) {
+		if (otherMatterTensor.doesIndexExist(sourceUpperIndex)) {
+			++matches;
+		}
+	}
+	for (auto& sourceLowerIndex : lowerIndices) {
+		if (otherMatterTensor.doesIndexExist(sourceLowerIndex)) {
+			++matches;
+		}
+	}
+	if (matches >= 2) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}

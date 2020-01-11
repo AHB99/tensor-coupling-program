@@ -1439,7 +1439,7 @@ void MathExpression::setSubstitutionFor5Index1Duplicate4Bar(Tensor& sourceReduci
 
 	tempMET.addIrreducibleTensor(tempIrrTensor);
 	tempMET.addLeviCivita(tempLevi);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
+	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient() * -1);
 	addTerm(tempMET);
 }
 
@@ -1852,14 +1852,6 @@ void MathExpression::erase0Terms() {
 }
 
 void MathExpression::simplifyExpressionBySymmetricAsymmetricProperty() {
-	//for (int i = 0; i < mathExpressionTerms.size(); ++i) {
-	//	if (!mathExpressionTerms[i].simplifyTermBySymmetricAsymmetricProperty()) {
-	//		mathExpressionTerms.erase(mathExpressionTerms.begin() + i);
-	//		--i;
-	//	}
-	//}
-
-	//Possible efficient way
 	for (auto& MET : mathExpressionTerms) {
 		MET.simplifyTermBySymmetricAsymmetricProperty();
 	}
@@ -2108,7 +2100,7 @@ void MathExpression::simplifyExpressionByRenamingPhase2() {
 							//Since no sign swapping during uncharged, and Structure Check ensures same charge, always valid
 							
 							//DEBUG: Removed for testing
-							//finalResult.mathExpressionTerms[j].mergeFabs();
+							//finalResult.mathExpressionTerms[j].chargeFabs();
 						}
 						
 						oneSuccessfulMatch = true;
@@ -2139,6 +2131,12 @@ void MathExpression::sortIrreducibleAndMatterTensorsOfAllTerms() {
 void MathExpression::reorderIndicesOfAllTensorsOfAllTerms(){
 	for (auto& MET : mathExpressionTerms) {
 		MET.reorderIndicesOfAllTensors();
+	}
+}
+
+void MathExpression::chargeAllFabs() {
+	for (auto& MET : mathExpressionTerms) {
+		MET.chargeFabs();
 	}
 }
 

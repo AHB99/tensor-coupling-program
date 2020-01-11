@@ -408,6 +408,19 @@ bool MathExpressionTerm::simplifyTermBySymmetricAsymmetricProperty() {
 			}
 		}
 	}
+	for (auto& possiblySymmetricTensor : irreducibleTensors) {
+		//For every symmetric Tensor
+		if (possiblySymmetricTensor.getSymmetryState()) {
+			//Check every matter Tensor
+			for (auto& matterTensor : matterTensors) {
+				if (possiblySymmetricTensor.hasAtleast2MatchingIndices(matterTensor)) {
+					coefficient = 0;
+					return false;
+				}
+			}
+		}
+	}
+
 	return true;
 }
 
@@ -1242,7 +1255,7 @@ MathExpression MathExpressionTerm::substitutePsiForLeftStarred(std::string& late
 	//Create 5 new names to use
 	std::vector<std::string> newNames;
 	for (int i = 0; i < 5; ++i) {
-		latestName = getNextName(latestName);
+		latestName = getNextNameGivenNamePhase2(latestName);
 		newNames.push_back(latestName);
 	}
 	
@@ -1292,7 +1305,7 @@ MathExpression MathExpressionTerm::substitutePsiForRightUnstarred(std::string& l
 	//Create 5 new names to use
 	std::vector<std::string> newNames;
 	for (int i = 0; i < 5; ++i) {
-		latestName = getNextName(latestName);
+		latestName = getNextNameGivenNamePhase2(latestName);
 		newNames.push_back(latestName);
 	}
 
@@ -1567,7 +1580,7 @@ void MathExpressionTerm::performRenamesPhase2(const std::vector<std::pair<std::s
 	performRenamesOnFab(renameMap);
 }
 
-void MathExpressionTerm::mergeFabs() {
+void MathExpressionTerm::chargeFabs() {
 	//multiplyWithCoefficient(2);
 	if (fab.getField() == 1 || fab.getField() == 5) {
 		fab.setCharge(FabCharge::POSITIVE);

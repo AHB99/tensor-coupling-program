@@ -149,3 +149,12 @@ void ProductResolverPhase2::normalizeIrreducibleTensors() {
 	finalMathExpression.printLatexPhase2();
 
 }
+
+void ProductResolverPhase2::chargeFabsOfAllTerms() {
+	finalMathExpression.chargeAllFabs();
+
+	//DEBUG
+	cout << "\nFabs Charged: " << endl;
+	finalMathExpression.printPhase2();
+	finalMathExpression.printLatexPhase2();
+}

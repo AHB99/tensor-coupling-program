@@ -38,18 +38,7 @@ int main() {
 	resolver.simplifyLevisOfEvaluatedTerms();
 	resolver.simplifyEvaluatedTermsByRenaming();
 	resolver.normalizeIrreducibleTensors(); //Normalize AFTER renaming
-
-	//MathExpressionTerm tempMET;
-	//tempMET.inputByUserPhase2();
-	//MathExpression tempExp;
-	//tempExp.addTerm(tempMET);
-	//cout << "Input:" << endl;
-	//tempExp.printPhase2();
-	//tempExp.sortIrreducibleAndMatterTensorsOfAllTerms();
-	//tempExp.reorderIndicesOfAllTensorsOfAllTerms();
-	//cout << "\nReordered:" << endl;
-	//tempExp.printPhase2();
-
+	resolver.chargeFabsOfAllTerms();
 
     return 0;
 }

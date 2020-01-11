@@ -9,6 +9,8 @@ using std::cout;
 using std::cin;
 using std::endl;
 
+class MatterTensor;
+
 class IrreducibleTensor {
 public:
 	IrreducibleTensor() : isSymmetric(false), field(0), isBarred(false) { }
@@ -86,6 +88,9 @@ public:
 	const std::vector<std::string>& getLowerIndices() const {
 		return lowerIndices;
 	}
+
+	bool hasAtleast2MatchingIndices(const MatterTensor& otherMatterTensor) const;
+
 
 
 private:

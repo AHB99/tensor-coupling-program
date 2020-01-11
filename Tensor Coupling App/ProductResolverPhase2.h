@@ -25,7 +25,7 @@ public:
 	void simplifyLevisOfEvaluatedTerms();
 	void simplifyEvaluatedTermsByRenaming();
 	void normalizeIrreducibleTensors();
-
+	void chargeFabsOfAllTerms();
 
 
 	MathExpression initialInput;
