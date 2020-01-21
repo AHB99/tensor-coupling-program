@@ -106,7 +106,7 @@ public:
 	void reduceRightBbtChainsByEvaluation();
 	void evaluateChargeConjugates();
 
-	void simplifyExpressionByRenamingPhase2();
+	void simplifyExpressionByRenamingPhase2(bool withFabMerging);
 	//Renaming funcs
 	void sortIrreducibleAndMatterTensorsOfAllTerms();
 	void reorderIndicesOfAllTensorsOfAllTerms();

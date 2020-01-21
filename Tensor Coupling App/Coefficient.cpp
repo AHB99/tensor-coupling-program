@@ -119,6 +119,14 @@ bool Coefficient::operator>=(const Coefficient& rhs) const {
 	return false;
 }
 
+Coefficient Coefficient::getAbsValue() const {
+	int newNonRootNumerator = nonRootNumerator;
+	if (newNonRootNumerator < 0) {
+		newNonRootNumerator *= -1;
+	}
+	return Coefficient(newNonRootNumerator, denominator, rootNumerator);
+}
+
 void Coefficient::printLatex() const {
 	if (nonRootNumerator > 0) {
 		cout << "+";

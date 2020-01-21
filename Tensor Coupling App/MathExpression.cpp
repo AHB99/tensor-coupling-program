@@ -2073,7 +2073,7 @@ void MathExpression::evaluateChargeConjugates() {
 }
 
 //NOTE: Fully ready for Phase 2
-void MathExpression::simplifyExpressionByRenamingPhase2() {
+void MathExpression::simplifyExpressionByRenamingPhase2(bool withFabMerging) {
 	sortIrreducibleAndMatterTensorsOfAllTerms();
 	reorderIndicesOfAllTensorsOfAllTerms();
 
@@ -2091,24 +2091,19 @@ void MathExpression::simplifyExpressionByRenamingPhase2() {
 				if (successfulRename) {
 					renamedTerm.reorderIndicesOfAllTensors();
 
-					//Technically, a successful rename, once ordered, should always be identical. But just to be safe
-					if (areMathExpressionTermsIdenticalPhase2(finalResult.mathExpressionTerms[j], renamedTerm)) {
-						//First, add terms together, then merge fab
+					//Will only fail if fabs not matching
+					if (areMathExpressionTermsIdenticalIgnoringFab(finalResult.mathExpressionTerms[j], renamedTerm)) {
+						//Add terms together
 						finalResult.mathExpressionTerms[j].addMathExpressionTermCoefficientToThisTerm(renamedTerm);
-						
-						if (!finalResult.mathExpressionTerms[j].getFab().getIsNull()) {
-							//Since no sign swapping during uncharged, and Structure Check ensures same charge, always valid
-							
-							//DEBUG: Removed for testing
-							//finalResult.mathExpressionTerms[j].chargeFabs();
-						}
 						
 						oneSuccessfulMatch = true;
 						break;
 					}
-					//DEBUG
-					else {
-						//cout << "ERROR" << endl;
+					//If mismatched fabs, then merge
+					else if (withFabMerging) {
+						finalResult.mathExpressionTerms[j].mergeFabs(renamedTerm);
+						oneSuccessfulMatch = true;
+						break;
 					}
 				}
 			}
@@ -2136,7 +2131,9 @@ void MathExpression::reorderIndicesOfAllTensorsOfAllTerms(){
 
 void MathExpression::chargeAllFabs() {
 	for (auto& MET : mathExpressionTerms) {
-		MET.chargeFabs();
+		if (MET.getFab().getCharge() == FabCharge::UNCHARGED) {
+			MET.chargeFab();
+		}
 	}
 }
 

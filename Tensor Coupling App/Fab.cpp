@@ -61,14 +61,12 @@ void Fab::inputByUser() {
 }
 
 int Fab::reorderIndices() {
+	//Uncharged cannot be reordered
+	if (charge == FabCharge::UNCHARGED) {
+		return 1;
+	}
 	int antisymmetricCoefficient = reorderIndicesAntisymmetrically(indices);
 
-	//if (charge == FabCharge::NEGATIVE && field == 3) {
-	//	return antisymmetricCoefficient;
-	//}
-
-	//TRIAL CHANGE: Seeing if Field 3 is antisymmetric always
-	
 	if (field == 3) {
 		return antisymmetricCoefficient;
 	}
@@ -78,4 +76,12 @@ int Fab::reorderIndices() {
 
 bool Fab::doesIndexExist(const std::string& index) const {
 	return (std::find(indices.begin(), indices.end(), index) != indices.end());
+}
+
+bool Fab::operator==(const Fab& rhs) const {
+	if (getIsNull() != rhs.getIsNull()) return false;
+	if (getField() != rhs.getField()) return false;
+	if (getCharge() != rhs.getCharge()) return false;
+	for (int i = 0; i < indices.size(); ++i) { if (indices[i] != rhs.indices[i]) return false; }
+	return true;
 }

@@ -37,8 +37,8 @@ int main() {
 	resolver.simplifyDeltasOfEvaluatedTerms();
 	resolver.simplifyLevisOfEvaluatedTerms();
 	resolver.simplifyEvaluatedTermsByRenaming();
-	resolver.normalizeIrreducibleTensors(); //Normalize AFTER renaming
 	resolver.chargeFabsOfAllTerms();
+	resolver.normalizeIrreducibleTensors(); //Normalize AFTER renaming
 
     return 0;
 }

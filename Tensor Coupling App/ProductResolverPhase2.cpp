@@ -133,7 +133,9 @@ void ProductResolverPhase2::simplifyLevisOfEvaluatedTerms() {
 
 //TODO: Amgbiguity not handled
 void ProductResolverPhase2::simplifyEvaluatedTermsByRenaming() {
-	finalMathExpression.simplifyExpressionByRenamingPhase2();
+	//Run once without fab merging, then with
+	finalMathExpression.simplifyExpressionByRenamingPhase2(false);
+	finalMathExpression.simplifyExpressionByRenamingPhase2(true);
 
 	//DEBUG
 	cout << "\nTerms simplified by renaming: " << endl;

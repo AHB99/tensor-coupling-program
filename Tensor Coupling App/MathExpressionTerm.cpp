@@ -1580,13 +1580,31 @@ void MathExpressionTerm::performRenamesPhase2(const std::vector<std::pair<std::s
 	performRenamesOnFab(renameMap);
 }
 
-void MathExpressionTerm::chargeFabs() {
-	//multiplyWithCoefficient(2);
+void MathExpressionTerm::chargeFab() {
+	multiplyWithCoefficient(2);
 	if (fab.getField() == 1 || fab.getField() == 5) {
 		fab.setCharge(FabCharge::POSITIVE);
 	}
 	else if (fab.getField() == 3) {
 		fab.setCharge(FabCharge::NEGATIVE);
 	}
+
+}
+
+void MathExpressionTerm::mergeFabs(const MathExpressionTerm& rhs) {
+	//If not mismatched, fail
+	if (fab.getIndexAt(0) == rhs.fab.getIndexAt(0)) return;
+	//If not equal coefficients, fail
+	if (coefficient.getAbsValue() != rhs.coefficient.getAbsValue()) return;
+	//If signs incompatible, fail
+	if (fab.getField() == 1 || fab.getField() == 5) {
+		if ((coefficient * rhs.coefficient) < 0) return;
+	}
+	else if (fab.getField() == 3) {
+		if ((coefficient * rhs.coefficient) > 0) return;
+	}
+
+	//If all tests pass, charge fab
+	chargeFab();
 
 }

@@ -664,11 +664,14 @@ bool areMathExpressionTermsSameStructurePhase2(const MathExpressionTerm& sourceT
 	return true;
 }
 
-bool areMathExpressionTermsIdenticalPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm)
+bool areMathExpressionTermsIdenticalIgnoringFab(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm)
 {
 	if (!areMathExpressionTermsIdentical(sourceTerm, attemptTerm)) return false;
 	for (int i = 0; i < sourceTerm.getNumberOfMatterTensors(); ++i) {
 		if (sourceTerm.getMatterTensorAt(i) != attemptTerm.getMatterTensorAt(i)) return false;
+	}
+	if (!sourceTerm.getFab().getIsNull() && !attemptTerm.getFab().getIsNull()) {
+		if (sourceTerm.getFab() != attemptTerm.getFab()) return false;
 	}
 	return true;
 }

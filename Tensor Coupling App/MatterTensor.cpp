@@ -91,8 +91,7 @@ bool MatterTensor::isSameStructure(const MatterTensor& rhs) const{
 	return true;
 }
 
-bool MatterTensor::operator==(const MatterTensor& rhs) const
-{
+bool MatterTensor::operator==(const MatterTensor& rhs) const {
 	if (!isSameStructure(rhs)) return false;
 	for (int i = 0; i < upperIndices.size(); ++i) { if (upperIndices[i] != rhs.upperIndices[i]) return false; }
 	for (int i = 0; i < lowerIndices.size(); ++i) { if (lowerIndices[i] != rhs.lowerIndices[i]) return false; }

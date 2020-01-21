@@ -46,6 +46,12 @@ public:
 	void changeIndexAt(int loc, const std::string& index) {
 		indices[loc] = index;
 	}
+	bool operator==(const Fab& rhs) const;
+	bool operator!=(const Fab& rhs) const {
+		return (!operator==(rhs));
+	}
+
+
 
 
 private:
