@@ -2101,8 +2101,7 @@ void MathExpression::simplifyExpressionByRenamingPhase2(bool withFabMerging) {
 					}
 					//If mismatched fabs, then merge
 					else if (withFabMerging) {
-						finalResult.mathExpressionTerms[j].mergeFabs(renamedTerm);
-						oneSuccessfulMatch = true;
+						oneSuccessfulMatch = finalResult.mathExpressionTerms[j].mergeFabs(renamedTerm);
 						break;
 					}
 				}
@@ -2129,10 +2128,10 @@ void MathExpression::reorderIndicesOfAllTensorsOfAllTerms(){
 	}
 }
 
-void MathExpression::chargeAllFabs() {
+void MathExpression::chargeAllUnchargedFabs() {
 	for (auto& MET : mathExpressionTerms) {
 		if (MET.getFab().getCharge() == FabCharge::UNCHARGED) {
-			MET.chargeFab();
+			MET.chargeFabWithoutMultiplication();
 		}
 	}
 }

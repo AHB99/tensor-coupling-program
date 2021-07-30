@@ -200,7 +200,9 @@ public:
 	void performRenamesPhase2(const std::vector<std::pair<std::string, std::string>>& renameMap);
 
 	void chargeFab();
-	void mergeFabs(const MathExpressionTerm& rhs);
+	void chargeFabWithoutMultiplication();
+
+	bool mergeFabs(const MathExpressionTerm& rhs);
 
 private:
 	//Helper for Levi grouping

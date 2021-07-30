@@ -1582,29 +1582,33 @@ void MathExpressionTerm::performRenamesPhase2(const std::vector<std::pair<std::s
 
 void MathExpressionTerm::chargeFab() {
 	multiplyWithCoefficient(2);
+	chargeFabWithoutMultiplication();
+}
+
+void MathExpressionTerm::chargeFabWithoutMultiplication() {
 	if (fab.getField() == 1 || fab.getField() == 5) {
 		fab.setCharge(FabCharge::POSITIVE);
 	}
 	else if (fab.getField() == 3) {
 		fab.setCharge(FabCharge::NEGATIVE);
 	}
-
 }
 
-void MathExpressionTerm::mergeFabs(const MathExpressionTerm& rhs) {
+bool MathExpressionTerm::mergeFabs(const MathExpressionTerm& rhs) {
 	//If not mismatched, fail
-	if (fab.getIndexAt(0) == rhs.fab.getIndexAt(0)) return;
+	if (fab.getIndexAt(0) == rhs.fab.getIndexAt(0)) return false;
 	//If not equal coefficients, fail
-	if (coefficient.getAbsValue() != rhs.coefficient.getAbsValue()) return;
+	if (coefficient.getAbsValue() != rhs.coefficient.getAbsValue()) return false;
 	//If signs incompatible, fail
 	if (fab.getField() == 1 || fab.getField() == 5) {
-		if ((coefficient * rhs.coefficient) < 0) return;
+		if ((coefficient * rhs.coefficient) < 0) return false;
 	}
 	else if (fab.getField() == 3) {
-		if ((coefficient * rhs.coefficient) > 0) return;
+		if ((coefficient * rhs.coefficient) > 0) return false;
 	}
 
 	//If all tests pass, charge fab
 	chargeFab();
+	return true;
 
 }

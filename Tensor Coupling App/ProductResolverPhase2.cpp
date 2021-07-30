@@ -49,6 +49,8 @@ void ProductResolverPhase2::simplifyRawTermsByRenaming() {
 	//DEBUG
 	cout << "\nRenaming simplified form: " << endl;
 	finalMathExpression.printPhase2();
+	finalMathExpression.printLatexPhase2();
+
 }
 
 void ProductResolverPhase2::reduceReducibleTensors() {
@@ -75,6 +77,8 @@ void ProductResolverPhase2::reduceReducibleTensors() {
 	//DEBUG
 	cout << "\nReduced form: " << endl;
 	finalMathExpression.printPhase2();
+	finalMathExpression.printLatexPhase2();
+
 }
 
 void ProductResolverPhase2::substitutePsiSpinors() {
@@ -97,6 +101,8 @@ void ProductResolverPhase2::substitutePsiSpinors() {
 	//DEBUG
 	cout << "\nPsi Substituted: " << endl;
 	finalMathExpression.printPhase2();
+	finalMathExpression.printLatexPhase2();
+
 }
 
 void ProductResolverPhase2::reduceRightBbtChains() {
@@ -104,6 +110,8 @@ void ProductResolverPhase2::reduceRightBbtChains() {
 	//DEBUG
 	cout << "\nBbt reduced: " << endl;
 	finalMathExpression.printPhase2();
+	finalMathExpression.printLatexPhase2();
+
 }
 
 void ProductResolverPhase2::evaluateChargeConjugates() {
@@ -129,17 +137,25 @@ void ProductResolverPhase2::simplifyLevisOfEvaluatedTerms() {
 	//DEBUG
 	cout << "\nLevis simplified: " << endl;
 	finalMathExpression.printPhase2();
+	finalMathExpression.printLatexPhase2();
+
 }
 
 //TODO: Amgbiguity not handled
 void ProductResolverPhase2::simplifyEvaluatedTermsByRenaming() {
 	//Run once without fab merging, then with
 	finalMathExpression.simplifyExpressionByRenamingPhase2(false);
+	cout << "\nAfter no fab merge" << endl;
+	finalMathExpression.printPhase2();
+	finalMathExpression.printLatexPhase2();
+
 	finalMathExpression.simplifyExpressionByRenamingPhase2(true);
 
 	//DEBUG
-	cout << "\nTerms simplified by renaming: " << endl;
+	cout << "\nTerms simplified by renaming with fab merge: " << endl;
 	finalMathExpression.printPhase2();
+	finalMathExpression.printLatexPhase2();
+
 }
 
 void ProductResolverPhase2::normalizeIrreducibleTensors() {
@@ -152,8 +168,8 @@ void ProductResolverPhase2::normalizeIrreducibleTensors() {
 
 }
 
-void ProductResolverPhase2::chargeFabsOfAllTerms() {
-	finalMathExpression.chargeAllFabs();
+void ProductResolverPhase2::chargeFabsOfAllUnchargedFabTerms() {
+	finalMathExpression.chargeAllUnchargedFabs();
 
 	//DEBUG
 	cout << "\nFabs Charged: " << endl;

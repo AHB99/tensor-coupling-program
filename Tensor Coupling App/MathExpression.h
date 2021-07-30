@@ -111,7 +111,7 @@ public:
 	void sortIrreducibleAndMatterTensorsOfAllTerms();
 	void reorderIndicesOfAllTensorsOfAllTerms();
 
-	void chargeAllFabs();
+	void chargeAllUnchargedFabs();
 
 private:
 	//The Expression Substitutions from REFERENCE.pdf

@@ -24,22 +24,7 @@ using std::endl;
 void phase1UI();
 
 int main() {
-	ProductResolverPhase2 resolver;
-	resolver.getInput();
-	resolver.generateRawTerms();
-	resolver.shiftBbtInRawTerms();
-	resolver.simplifyDeltasOfRawTerms();
-	resolver.simplifyRawTermsByRenaming();
-	resolver.reduceReducibleTensors();
-	resolver.substitutePsiSpinors();
-	resolver.reduceRightBbtChains();
-	resolver.evaluateChargeConjugates();
-	resolver.simplifyDeltasOfEvaluatedTerms();
-	resolver.simplifyLevisOfEvaluatedTerms();
-	resolver.simplifyEvaluatedTermsByRenaming();
-	resolver.chargeFabsOfAllTerms();
-	resolver.normalizeIrreducibleTensors(); //Normalize AFTER renaming
-
+	phase1UI();
     return 0;
 }
 
