@@ -36,7 +36,7 @@ void LeviCivita::printLatex() const {
 
 void LeviCivita::inputByUser() {
 	cout << "Enter 5 indices: ";
-	
+
 	for (int i = 0; i < 5; ++i) {
 		std::string tempString;
 		cin >> tempString;
@@ -54,7 +54,7 @@ std::string LeviCivita::getNameAtLocation(int location) const {
 
 void LeviCivita::swapIndexAtLocationWithOneOnLeft(int location) {
 	std::string temp = indices[location];
-	indices[location] = indices[location-1];
+	indices[location] = indices[location - 1];
 	indices[location - 1] = temp;
 }
 
@@ -106,16 +106,4 @@ int LeviCivita::numberOfSimilarIndices(const LeviCivita& otherLevi) const {
 		}
 	}
 	return result;
-}
-
-
-//Phase 2
-bool LeviCivita::replaceIndexIfPresent(std::string oldIndex, std::string newIndex) {
-	for (auto& index : indices) {
-		if (index == oldIndex) {
-			index = newIndex;
-			return true;
-		}
-	}
-	return false;
 }

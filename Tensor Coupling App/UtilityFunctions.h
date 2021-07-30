@@ -19,6 +19,7 @@ using std::endl;
 class IrreducibleTensor;
 class Delta;
 
+//Non-member function declarations
 
 bool performRenameIfValid(TensorTerm& sourceTerm, TensorTerm& attemptTerm, TensorTerm& renamedTerm);
 
@@ -90,18 +91,5 @@ bool performRenameIfValidIncludingPermutationsOnIrreducibleTensors(const MathExp
 //Following i-r naming convention
 void renameDeltaExpressionBasedOnLevis(int numOfMatches, const LeviCivita& firstLevi, const LeviCivita& secondLevi, MathExpression& mathExpressionToBeRenamed);
 
-//******************************Phase 2***************************************
 
-std::string getNextNameGivenTerm(const MathExpressionTerm& met);
-std::string getNextNameGivenNamePhase2(const std::string& oldName);
-long combination(int n, int r);
-int reorderIndicesAntisymmetrically(std::vector<std::string>& vec);
-bool isPairOfGenerationAndRegularIndices(const std::string& firstIndex, const std::string& secondIndex);
-bool areMathExpressionTermsSameStructurePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm);
-bool areMathExpressionTermsIdenticalIgnoringFab(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm);
-bool performRenameIfValidPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, MathExpressionTerm& renamedTerm);
-bool performRenameIfValidIncludingPermutationsPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, MathExpressionTerm& renamedTerm);
-bool checkZoneRenameIssuePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, const std::pair<std::string, std::string>& rename);
-bool trySingleRenamePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, const std::vector<std::string>& blindVector, std::vector<std::pair<std::string, std::string>>& renameMap, const std::string& trialRename);
-std::string getGenericPhysicalFieldFromEncodedField(int field);
-#endif 
+#endif

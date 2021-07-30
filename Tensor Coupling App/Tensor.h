@@ -12,15 +12,14 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-class BbtChain;
 
 class Tensor {
 public:
 	void addIndex(std::string name, int barstatus);
 	void setLabel(std::string inpLabel);
 	int getNumberOfIndices() const;
-	void printTensor() const;
-	void printLatex() const;
+	void printTensor();
+	void printTensorAsLatex();
 	//Assuming bars left, unbars right.
 	int getUnbarredZoneLocation();
 
@@ -38,8 +37,7 @@ public:
 	//Assuming it exists
 	void changeIndexNameTo(int location, std::string newName);
 
-	void swapIndexWithOneOnRight(int location);
-	void swapIndexWithOneOnLeft(int location);
+	void swapIndexWithNextOne(int location);
 
 
 	std::string getIndexNameAt(int location) {
@@ -61,23 +59,6 @@ public:
 	int getBarStateFromName(std::string name);
 
 	int getNumberOfBarredIndices() const;
-
-	//Phase 2
-	bool replaceIndexIfPresent(const std::string& oldIndex, const std::string& newIndex);
-	BbtChain convertToBbtChain();
-	int getNumberOfDuplicatedIndices() const;
-	std::vector<std::string> getDuplicatedIndices() const;
-	int getLocationOfFirstOccurenceOfIndex(const std::string& indexName) const;
-	int getLocationOfSecondOccurenceOfIndex(const std::string& indexName) const;
-
-	std::vector<std::string> getIndices() const {
-		std::vector<std::string> result;
-		for (auto& index : indices) {
-			result.push_back(index.first);
-		}
-		return result;
-	}
-
 private:
 	//vector of indices. Index: name, barstatus.
 	//Bar status: 0 = unbarred. 1 = barred.

@@ -151,42 +151,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bbt.cpp" />
-    <ClCompile Include="BbtChain.cpp" />
     <ClCompile Include="Coefficient.cpp" />
     <ClCompile Include="Delta.cpp" />
-    <ClCompile Include="Fab.cpp" />
-    <ClCompile Include="GammaTensor.cpp" />
     <ClCompile Include="IrreducibleTensor.cpp" />
     <ClCompile Include="LeviCivita.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MathExpression.cpp" />
     <ClCompile Include="MathExpressionTerm.cpp" />
-    <ClCompile Include="MatterTensor.cpp" />
     <ClCompile Include="NormalizedTensor.cpp" />
     <ClCompile Include="ProductResolver.cpp" />
-    <ClCompile Include="ProductResolverPhase2.cpp" />
-    <ClCompile Include="Spinor.cpp" />
     <ClCompile Include="Tensor.cpp" />
     <ClCompile Include="TensorTerm.cpp" />
     <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bbt.h" />
-    <ClInclude Include="BbtChain.h" />
     <ClInclude Include="Coefficient.h" />
     <ClInclude Include="Delta.h" />
-    <ClInclude Include="Fab.h" />
-    <ClInclude Include="GammaTensor.h" />
     <ClInclude Include="IrreducibleTensor.h" />
     <ClInclude Include="LeviCivita.h" />
     <ClInclude Include="MathExpression.h" />
     <ClInclude Include="MathExpressionTerm.h" />
-    <ClInclude Include="MatterTensor.h" />
     <ClInclude Include="NormalizedTensor.h" />
     <ClInclude Include="ProductResolver.hpp" />
-    <ClInclude Include="ProductResolverPhase2.h" />
-    <ClInclude Include="Spinor.h" />
     <ClInclude Include="Tensor.h" />
     <ClInclude Include="TensorTerm.h" />
     <ClInclude Include="UtilityFunctions.h" />

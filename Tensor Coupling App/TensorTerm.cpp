@@ -1,12 +1,11 @@
 #include "TensorTerm.h"
-#include "MathExpressionTerm.h"
 #include "UtilityFunctions.h"
 
 // TENSOR TERM MEMBER DEFS
 
 void TensorTerm::inputTensorTermByKeyboard() {
 	cout << "Enter coefficient:";
-	coefficient.inputByUser();
+	cin >> coefficient;
 	int numOfTensors;
 	cout << "Enter number of tensors: ";
 	cin >> numOfTensors;
@@ -46,8 +45,6 @@ void TensorTerm::printTensorTerm() {
 	cout << endl;
 }
 
-
-
 void TensorTerm::printTensorTermAsLatex() {
 	if (coefficient > 0) {
 		cout << "+";
@@ -63,7 +60,7 @@ void TensorTerm::printTensorTermAsLatex() {
 		cout << coefficient;
 	}
 	for (auto& tensor : tensors) {
-		tensor.printLatex();
+		tensor.printTensorAsLatex();
 	}
 
 }
@@ -104,15 +101,15 @@ void TensorTerm::reorderIndicesOfTerm() {
 			for (int i = 0; i < tensor.getNumberOfIndices() - 1; ++i) {
 				if (tensor.getBarStateAt(i) == tensor.getBarStateAt(i + 1)) {
 					//If they are the same barstate and the current value is less than the next.
-					if ((tensor.getIndexNameAt(i)>tensor.getIndexNameAt(i + 1))) {
-						tensor.swapIndexWithOneOnRight(i);
+					if ((tensor.getIndexNameAt(i) > tensor.getIndexNameAt(i + 1))) {
+						tensor.swapIndexWithNextOne(i);
 						coefficient *= -1;
 						modified = true;
 					}
 				}
 				else {
 					if ((tensor.getBarStateAt(i) == 0) && (tensor.getBarStateAt(i + 1) == 1)) {
-						tensor.swapIndexWithOneOnRight(i);
+						tensor.swapIndexWithNextOne(i);
 						coefficient *= -1;
 						modified = true;
 					}
@@ -217,10 +214,10 @@ void TensorTerm::getAllPermutationsOfAllAmbiguousZones(std::vector<TensorTerm>& 
 		locationCounters[0]++;
 		//Update counter
 		for (int j = 0; j < locationCounters.size() - 1; ++j) {
-//			if (locationCounters[j] >= ambiguousZones[j].second) {
+			//			if (locationCounters[j] >= ambiguousZones[j].second) {
 
 
-			//If a counter exceeds it's zone's number of permutations, increment the next zone index and reset current to 0.
+						//If a counter exceeds it's zone's number of permutations, increment the next zone index and reset current to 0.
 			if (locationCounters[j] >= locationPermutationsOfAllZones[j].size()) {
 				locationCounters[j + 1]++;
 				locationCounters[j] = 0;
@@ -268,48 +265,4 @@ void TensorTerm::fillBarsBasedOnBinaryMarker(std::string indexName, int binaryMa
 void TensorTerm::addTermCoefficientIntoThisTerm(const TensorTerm& otherTerm) {
 	coefficient += otherTerm.getCoefficient();
 }
-
-
-//***************************PHASE 2*********************
-MathExpressionTerm TensorTerm::convertToMet(const MathExpressionTerm& templateMet) {
-	MathExpressionTerm resultMet(templateMet);
-	std::vector<Tensor> tempReducibleTensors;
-	for (auto& tensor : tensors) {
-		if (tensor.getLabel() == "GAMMA") {
-			resultMet.setRightBbtChain(tensor.convertToBbtChain());
-		}
-		else {
-			tempReducibleTensors.push_back(tensor);
-		}
-	}
-	resultMet.setReducibleTensors(tempReducibleTensors);
-	resultMet.setCoefficient(coefficient);
-
-	return resultMet;
-}
-
-void TensorTerm::shiftDuplicatedIndexToLeft(const std::string& duplicatedIndex, int tensorLocation) {
-	int currentLocation = tensors[tensorLocation].getLocationOfFirstOccurenceOfIndex(duplicatedIndex);
-	while (currentLocation > 0) {
-		tensors[tensorLocation].swapIndexWithOneOnLeft(currentLocation);
-		coefficient *= -1;
-		--currentLocation;
-	}
-
-	currentLocation = tensors[tensorLocation].getLocationOfSecondOccurenceOfIndex(duplicatedIndex);
-	int boundary;
-	//If unbarred, go till second spot, else till first spot
-	if (tensors[tensorLocation].getBarStateAt(currentLocation) == 0) {
-		boundary = 1;
-	}
-	else {
-		boundary = 0;
-	}
-	while (currentLocation > boundary) {
-		tensors[tensorLocation].swapIndexWithOneOnLeft(currentLocation);
-		coefficient *= -1;
-		--currentLocation;
-	}
-}
-
 

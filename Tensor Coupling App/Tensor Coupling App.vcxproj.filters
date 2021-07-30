@@ -15,22 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Bbt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BbtChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Coefficient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Delta.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Fab.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GammaTensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IrreducibleTensor.cpp">
@@ -48,19 +36,10 @@
     <ClCompile Include="MathExpressionTerm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MatterTensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NormalizedTensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProductResolver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ProductResolverPhase2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Spinor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Tensor.cpp">
@@ -74,22 +53,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bbt.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BbtChain.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Coefficient.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Delta.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Fab.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GammaTensor.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="IrreducibleTensor.h">
@@ -104,19 +71,10 @@
     <ClInclude Include="MathExpressionTerm.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MatterTensor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="NormalizedTensor.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ProductResolver.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ProductResolverPhase2.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spinor.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Tensor.h">

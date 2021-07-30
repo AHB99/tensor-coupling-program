@@ -41,7 +41,6 @@ public:
 	bool operator<=(const Coefficient& rhs) const;
 	bool operator>=(const Coefficient& rhs) const;
 
-	Coefficient getAbsValue() const;
 
 	int getNonRootNumerator() const {
 		return nonRootNumerator;
@@ -58,7 +57,7 @@ private:
 	void simplifyRoot();
 
 	int nonRootNumerator;
-	int rootNumerator = 1;
+	int rootNumerator;
 	int denominator;
 };
 

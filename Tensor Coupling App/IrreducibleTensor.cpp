@@ -61,7 +61,7 @@ void IrreducibleTensor::printLatex() const {
 			cout << "_{(S)}";
 		}
 	}
-	
+
 }
 
 
@@ -91,7 +91,7 @@ void IrreducibleTensor::inputByUser() {
 }
 
 bool IrreducibleTensor::doesIndexExist(std::string index) const {
-	return (doesIndexExistInUpperZone(index)||doesIndexExistInLowerZone(index));
+	return (doesIndexExistInUpperZone(index) || doesIndexExistInLowerZone(index));
 }
 
 bool IrreducibleTensor::doesIndexExistInUpperZone(std::string index) const {
@@ -252,26 +252,5 @@ std::string IrreducibleTensor::getPhysicalFieldFromEncodedField() const {
 		else {
 			return "\\bar{126}";
 		}
-	}
-}
-
-bool IrreducibleTensor::hasAtleast2MatchingIndices(const MatterTensor& otherMatterTensor) const {
-	//Check upper indices
-	int matches = 0;
-	for (auto& sourceUpperIndex : upperIndices) {
-		if (otherMatterTensor.doesIndexExist(sourceUpperIndex)) {
-			++matches;
-		}
-	}
-	for (auto& sourceLowerIndex : lowerIndices) {
-		if (otherMatterTensor.doesIndexExist(sourceLowerIndex)) {
-			++matches;
-		}
-	}
-	if (matches >= 2) {
-		return true;
-	}
-	else {
-		return false;
 	}
 }

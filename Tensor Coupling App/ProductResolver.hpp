@@ -21,33 +21,24 @@ class ProductResolver {
 public:
 	ProductResolver();
 
-    void parseInput(std::string input);
-    void generateAllUnsimplifiedReducibleTensorTerms();
+	void parseInput(std::string input);
+	void generateAllUnsimplifiedReducibleTensorTerms();
 
 	void simplifyReducibleTensorTerms();
 	void fullyReduceTensorTerms();
 	void normalizeIrreducibleTensorTerms();
 
-    void printSimplifiedReducibleTensorTermsAsLatex();
+	void printSimplifiedReducibleTensorTermsAsLatex();
 	void printMathExpressionAsLatex();
 	void printUnsimplifiedReducibleTensorTerms();
 	void printSimplifiedReducibleTensorTerms();
 	void printMathExpression();
 
-	//Phase 2
-	void setAllReducibleTensorTermsFromVector(const std::vector<TensorTerm>& inpTensorTerms) {
-		allTensorTerms = inpTensorTerms;
-	}
-	std::vector<TensorTerm> getSimplifiedTensorTerms() const {
-		return simplifiedTensorTerms;
-	}
 
-	static void setupPredeterminedLeviCivitaExpansions(MathExpression& pred2, MathExpression& pred1, MathExpression& pred0);
 
 private:
 	MathExpression fullyReduceTensorTermAtLocation(int location);
 	void erase0CoefficientReducibleTensorTerms();
-
 
 	std::vector<std::string> allIndexNames;
 	TensorTerm originalTensorTerm;

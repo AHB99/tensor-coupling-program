@@ -1,4 +1,3 @@
-
 #include "ProductResolver.hpp"
 #include "TensorTerm.h"
 #include "Tensor.h"
@@ -8,27 +7,61 @@
 #include <regex>
 
 ProductResolver::ProductResolver() {
-	setupPredeterminedLeviCivitaExpansions(this->predetermined2Match, this->predetermined1Match, this->predetermined0Match);
+	LeviCivita tempLevi2MatchFirst, tempLevi2MatchSecond, tempLevi1MatchFirst, tempLevi1MatchSecond, tempLevi0MatchFirst, tempLevi0MatchSecond;
+	//Determine 2 match expression
+	std::vector<std::string> tempVec2MatchFirst = { "i", "j", "k", "l", "m" };
+	std::vector<std::string> tempVec2MatchSecond = { "i", "j", "n", "o", "p" };
+	for (auto& index : tempVec2MatchFirst) {
+		tempLevi2MatchFirst.addIndex(index);
+	}
+	for (auto& index : tempVec2MatchSecond) {
+		tempLevi2MatchSecond.addIndex(index);
+	}
+	predetermined2Match.setPredeterminedSubstitutionsFor2Matches(tempLevi2MatchFirst, tempLevi2MatchSecond);
+
+	//Determine 1 match expression
+	std::vector<std::string> tempVec1MatchFirst = { "i", "j", "k", "l", "m" };
+	std::vector<std::string> tempVec1MatchSecond = { "i", "n", "o", "p", "q" };
+	for (auto& index : tempVec1MatchFirst) {
+		tempLevi1MatchFirst.addIndex(index);
+	}
+	for (auto& index : tempVec1MatchSecond) {
+		tempLevi1MatchSecond.addIndex(index);
+	}
+	predetermined1Match.setPredeterminedSubstitutionsFor1Match(tempLevi1MatchFirst, tempLevi1MatchSecond);
+
+
+	//Determine 0 match expression
+
+	std::vector<std::string> tempVec0MatchFirst = { "i", "j", "k", "l", "m" };
+	std::vector<std::string> tempVec0MatchSecond = { "n", "o", "p", "q", "r" };
+	for (auto& index : tempVec0MatchFirst) {
+		tempLevi0MatchFirst.addIndex(index);
+	}
+	for (auto& index : tempVec0MatchSecond) {
+		tempLevi0MatchSecond.addIndex(index);
+	}
+	predetermined0Match.setPredeterminedSubstitutionsFor0Matches(tempLevi0MatchFirst, tempLevi0MatchSecond);
 }
 
 
 void ProductResolver::printSimplifiedReducibleTensorTermsAsLatex() {
 
-    std::cout << "\n";
-    int trivialDenominator = pow(2, allIndexNames.size());
+	std::cout << "\n";
+	int trivialDenominator = pow(2, allIndexNames.size());
 
-    if (trivialDenominator != 1) {
-        std::cout << "\\frac{1}{" + std::to_string(trivialDenominator) + "}(";
-    }
+	if (trivialDenominator != 1) {
+		std::cout << "\\frac{1}{" + std::to_string(trivialDenominator) + "}(";
+	}
 
 	for (int i = 0; i < simplifiedTensorTerms.size(); ++i) {
 		simplifiedTensorTerms[i].printTensorTermAsLatex();
-    }
-    
-    if (trivialDenominator != 1) {
-        cout << ")";
-    }
-    cout << "\n";  
+	}
+
+	if (trivialDenominator != 1) {
+		cout << ")";
+	}
+	cout << "\n";
 }
 
 
@@ -44,7 +77,7 @@ void ProductResolver::generateAllUnsimplifiedReducibleTensorTerms() {
 		TensorTerm currentGeneratedTensorTerm(originalTensorTerm);
 		uint32_t mask = 1;
 
-		int locationOfIndexToChoose = numberOfIndices-1;
+		int locationOfIndexToChoose = numberOfIndices - 1;
 		for (uint32_t j = 0; j < numberOfIndices; j++) {
 			uint32_t bar_state = (i & mask) >> j;
 
@@ -66,7 +99,7 @@ void ProductResolver::parseInput(std::string input) {
 	std::vector<std::string> allTensorTokens;
 	std::vector<std::string> allIndices;
 
-	for (std::sregex_iterator it(input.begin(), input.end(), fullTensorTokens);it != end; ++it) {
+	for (std::sregex_iterator it(input.begin(), input.end(), fullTensorTokens); it != end; ++it) {
 		if (!(it->empty())) {
 			allTensorTokens.push_back(it->str());
 		}
@@ -103,7 +136,7 @@ void ProductResolver::printSimplifiedReducibleTensorTerms() {
 			cout << " + \n";
 		}
 	}
-	
+
 	if (!simplifiedTensorTerms.empty()) {
 		simplifiedTensorTerms.back().printTensorTerm();
 	}
@@ -129,8 +162,8 @@ void ProductResolver::simplifyReducibleTensorTerms() {
 		bool oneSuccessfulMatch = false;
 		//Check all terms in simplified expression that has been generated so far
 		for (int j = 0; j < simplifiedTensorTerms.size(); ++j) {
-	
-			if (areTensorTermsSameStructure(simplifiedTensorTerms[j],allTensorTerms[i])) {
+
+			if (areTensorTermsSameStructure(simplifiedTensorTerms[j], allTensorTerms[i])) {
 				TensorTerm renamedTerm;
 				//Attempt to rename the indices
 				bool successfulRename = performRenameIfValidIncludingPermutations(simplifiedTensorTerms[j], allTensorTerms[i], renamedTerm);
@@ -150,7 +183,7 @@ void ProductResolver::simplifyReducibleTensorTerms() {
 			simplifiedTensorTerms.push_back(allTensorTerms[i]);
 		}
 	}
-	
+
 	erase0CoefficientReducibleTensorTerms();
 }
 
@@ -163,37 +196,36 @@ void ProductResolver::erase0CoefficientReducibleTensorTerms() {
 	}
 }
 
-
 MathExpression ProductResolver::fullyReduceTensorTermAtLocation(int location) {
-		MathExpression result;
-		MathExpressionTerm tempTermFor1Coefficient;
-		tempTermFor1Coefficient.setCoefficient(1);
-		result.addTerm(tempTermFor1Coefficient);
+	MathExpression result;
+	MathExpressionTerm tempTermFor1Coefficient;
+	tempTermFor1Coefficient.setCoefficient(1);
+	result.addTerm(tempTermFor1Coefficient);
 
-		std::sort(allIndexNames.begin(), allIndexNames.end(), compareIndexStrengths);
-		std::string latestName = allIndexNames.back();
+	std::sort(allIndexNames.begin(), allIndexNames.end(), compareIndexStrengths);
+	std::string latestName = allIndexNames.back();
 
-		//Substitute each Reducible Tensor with the Irreducible Tensor Expression and expand
-		for (int i = 0; i < simplifiedTensorTerms[location].getSize(); ++i) {
-			MathExpression tempME;
-			Tensor currentTensor = simplifiedTensorTerms[location].getTensor(i);
-			tempME.setSubstitutionFromReducibleTensor(currentTensor, latestName);
-			result = expandMathExpressions(result, tempME);
-		}
+	//Substitute each Reducible Tensor with the Irreducible Tensor Expression and expand
+	for (int i = 0; i < simplifiedTensorTerms[location].getSize(); ++i) {
+		MathExpression tempME;
+		Tensor currentTensor = simplifiedTensorTerms[location].getTensor(i);
+		tempME.setSubstitutionFromReducibleTensor(currentTensor, latestName);
+		result = expandMathExpressions(result, tempME);
+	}
 
-		//Expand and simplify expression
+	//Expand and simplify expression
 
-		cout << "\nExpanding term " << (location + 1) << "..." <<  endl;
-		result.expandAllLeviCivitas(predetermined2Match,predetermined1Match,predetermined0Match);
+	cout << "\nExpanding term " << (location + 1) << "..." << endl;
+	result.expandAllLeviCivitas(predetermined2Match, predetermined1Match, predetermined0Match);
 
-		cout << "\nSimplifying term " << (location + 1) << "..." << endl;
-		result.simplifyExpressionByDeltas();
-		result.simplifyExpressionBySymmetricAsymmetricProperty();
-		result.simplifyExpressionByRenaming();
+	cout << "\nSimplifying term " << (location + 1) << "..." << endl;
+	result.simplifyExpressionByDeltas();
+	result.simplifyExpressionBySymmetricAsymmetricProperty();
+	result.simplifyExpressionByRenaming();
 
-		//The original reducible TensorTerm's coefficient needs to be considered
-		result.multiplyByCoefficient(simplifiedTensorTerms[location].getCoefficient());
-		return result;
+	//The original reducible TensorTerm's coefficient needs to be considered
+	result.multiplyByCoefficient(simplifiedTensorTerms[location].getCoefficient());
+	return result;
 
 }
 
@@ -224,43 +256,4 @@ void ProductResolver::fullyReduceTensorTerms() {
 
 void ProductResolver::normalizeIrreducibleTensorTerms() {
 	finalMathExpression.normalizeAllIrreducibleTensors();
-}
-
-//Phase 2
-void ProductResolver::setupPredeterminedLeviCivitaExpansions(MathExpression& predetermined2Match, MathExpression& predetermined1Match, MathExpression& predetermined0Match) {
-	LeviCivita tempLevi2MatchFirst, tempLevi2MatchSecond, tempLevi1MatchFirst, tempLevi1MatchSecond, tempLevi0MatchFirst, tempLevi0MatchSecond;
-	//Determine 2 match expression
-	std::vector<std::string> tempVec2MatchFirst = { "i", "j", "k", "l", "m" };
-	std::vector<std::string> tempVec2MatchSecond = { "i", "j", "n", "o", "p" };
-	for (auto& index : tempVec2MatchFirst) {
-		tempLevi2MatchFirst.addIndex(index);
-	}
-	for (auto& index : tempVec2MatchSecond) {
-		tempLevi2MatchSecond.addIndex(index);
-	}
-	predetermined2Match.setPredeterminedSubstitutionsFor2Matches(tempLevi2MatchFirst, tempLevi2MatchSecond);
-
-	//Determine 1 match expression
-	std::vector<std::string> tempVec1MatchFirst = { "i", "j", "k", "l", "m" };
-	std::vector<std::string> tempVec1MatchSecond = { "i", "n", "o", "p", "q" };
-	for (auto& index : tempVec1MatchFirst) {
-		tempLevi1MatchFirst.addIndex(index);
-	}
-	for (auto& index : tempVec1MatchSecond) {
-		tempLevi1MatchSecond.addIndex(index);
-	}
-	predetermined1Match.setPredeterminedSubstitutionsFor1Match(tempLevi1MatchFirst, tempLevi1MatchSecond);
-
-
-	//Determine 0 match expression
-
-	std::vector<std::string> tempVec0MatchFirst = { "i", "j", "k", "l", "m" };
-	std::vector<std::string> tempVec0MatchSecond = { "n", "o", "p", "q", "r" };
-	for (auto& index : tempVec0MatchFirst) {
-		tempLevi0MatchFirst.addIndex(index);
-	}
-	for (auto& index : tempVec0MatchSecond) {
-		tempLevi0MatchSecond.addIndex(index);
-	}
-	predetermined0Match.setPredeterminedSubstitutionsFor0Matches(tempLevi0MatchFirst, tempLevi0MatchSecond);
 }

@@ -30,26 +30,26 @@ void Coefficient::simplify() {
 }
 
 Coefficient Coefficient::operator*(const Coefficient& rhs) const {
-	Coefficient result(nonRootNumerator*rhs.nonRootNumerator, denominator*rhs.denominator, rootNumerator*rhs.rootNumerator);
+	Coefficient result(nonRootNumerator * rhs.nonRootNumerator, denominator * rhs.denominator, rootNumerator * rhs.rootNumerator);
 	result.simplify();
 	return result;
 }
 
 Coefficient Coefficient::multiplyWithoutSimplifying(const Coefficient& rhs) const {
-	Coefficient result(nonRootNumerator*rhs.nonRootNumerator, denominator*rhs.denominator, rootNumerator*rhs.rootNumerator);
+	Coefficient result(nonRootNumerator * rhs.nonRootNumerator, denominator * rhs.denominator, rootNumerator * rhs.rootNumerator);
 	return result;
 }
 
 
 Coefficient Coefficient::operator+(const Coefficient& rhs) const {
 	int denomLCM = lcm(denominator, rhs.denominator);
-	Coefficient result((nonRootNumerator*(denomLCM/denominator)) + (rhs.nonRootNumerator*(denomLCM/rhs.denominator)), denomLCM);
+	Coefficient result((nonRootNumerator * (denomLCM / denominator)) + (rhs.nonRootNumerator * (denomLCM / rhs.denominator)), denomLCM);
 	result.simplify();
 	return result;
 }
 
 Coefficient Coefficient::operator-(const Coefficient& rhs) const {
-	return ((*this) + (rhs*-1));
+	return ((*this) + (rhs * -1));
 }
 
 Coefficient& Coefficient::operator=(const Coefficient& rhs) {
@@ -82,13 +82,13 @@ bool Coefficient::operator<(const Coefficient& rhs) const {
 	if (operator==(rhs)) {
 		return true;
 	}
-	double lhsTrue = (1.0*nonRootNumerator) / denominator;
-	double rhsTrue = (1.0*rhs.nonRootNumerator) / rhs.denominator;
+	double lhsTrue = (1.0 * nonRootNumerator) / denominator;
+	double rhsTrue = (1.0 * rhs.nonRootNumerator) / rhs.denominator;
 	return (lhsTrue < rhsTrue);
 }
 
 bool Coefficient::operator>(const Coefficient& rhs) const {
-	if (operator==(rhs)||operator<(rhs)) {
+	if (operator==(rhs) || operator<(rhs)) {
 		return false;
 	}
 	return true;
@@ -99,7 +99,7 @@ bool Coefficient::operator==(const Coefficient& rhs) const {
 	Coefficient lhsCopy(*this), rhsCopy(rhs);
 	lhsCopy.simplify();
 	rhsCopy.simplify();
-	return ((lhsCopy.nonRootNumerator == rhsCopy.nonRootNumerator) && (lhsCopy.denominator == rhsCopy.denominator)&& (lhsCopy.rootNumerator == rhsCopy.rootNumerator));
+	return ((lhsCopy.nonRootNumerator == rhsCopy.nonRootNumerator) && (lhsCopy.denominator == rhsCopy.denominator) && (lhsCopy.rootNumerator == rhsCopy.rootNumerator));
 }
 bool Coefficient::operator!=(const Coefficient& rhs) const {
 	return !(operator==(rhs));
@@ -117,14 +117,6 @@ bool Coefficient::operator>=(const Coefficient& rhs) const {
 		return true;
 	}
 	return false;
-}
-
-Coefficient Coefficient::getAbsValue() const {
-	int newNonRootNumerator = nonRootNumerator;
-	if (newNonRootNumerator < 0) {
-		newNonRootNumerator *= -1;
-	}
-	return Coefficient(newNonRootNumerator, denominator, rootNumerator);
 }
 
 void Coefficient::printLatex() const {
@@ -156,8 +148,8 @@ void Coefficient::simplifyRoot() {
 	int j = 2;
 	while (j < rootNumerator) {
 		//If j squared divides it perfectly, do so, and move j outside the root. Reset j to search again
-		if ((rootNumerator%(j*j)) == 0) {
-			rootNumerator /= (j*j);
+		if ((rootNumerator % (j * j)) == 0) {
+			rootNumerator /= (j * j);
 			nonRootNumerator *= j;
 			j = 2;
 		}
@@ -181,8 +173,4 @@ std::ostream& operator<<(std::ostream& os, const Coefficient& coefficient) {
 	}
 	return os;
 }
-
-
-
-
 

@@ -5,7 +5,6 @@
 #include <algorithm>
 
 #include "ProductResolver.hpp"
-#include "ProductResolverPhase2.h"
 #include "Tensor.h"
 #include "TensorTerm.h"
 #include "UtilityFunctions.h"
@@ -21,14 +20,7 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-void phase1UI();
-
 int main() {
-	phase1UI();
-    return 0;
-}
-
-void phase1UI() {
 	ProductResolver resolver;
 
 	std::string input;
@@ -60,4 +52,8 @@ void phase1UI() {
 	char exit;
 	cout << "Confirm quit (Enter any key): ";
 	cin >> exit;
+
+
+	return 0;
 }
+

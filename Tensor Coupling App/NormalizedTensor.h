@@ -30,13 +30,6 @@ public:
 	//Returns actual SO(10) field from program's encoded version
 	std::string getPhysicalFieldFromEncodedField() const;
 
-	std::vector<std::string> getIndices() const {
-		std::vector<std::string> result;
-		result.insert(result.begin(), upperIndices.begin(), upperIndices.end());
-		result.insert(result.begin(), lowerIndices.begin(), lowerIndices.end());
-		return result;
-	}
-
 private:
 	std::vector<std::string> upperIndices;
 	std::vector<std::string> lowerIndices;

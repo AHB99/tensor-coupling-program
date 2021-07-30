@@ -1,7 +1,6 @@
 #include "MathExpression.h"
 #include "Tensor.h"
 #include "UtilityFunctions.h"
-#include "ProductResolver.hpp"
 
 void MathExpression::print() const {
 	if (mathExpressionTerms.empty()) {
@@ -54,6 +53,18 @@ void MathExpression::simplifyCoefficientsOfAllTerms() {
 
 
 void MathExpression::simplifyExpressionByDeltas() {
+
+	//int i = 0;
+	//while (i < mathExpressionTerms.size()) {
+	//	//If the term got cancelled, delete it, else increment the loop.
+	//	if (!mathExpressionTerms[i].simplifyTermByDeltas()) {
+	//		mathExpressionTerms.erase(mathExpressionTerms.begin() + i);
+	//	}
+	//	else {
+	//		++i;
+	//	}
+	//}
+
 	//Possible efficient redo.
 
 	for (auto& MET : mathExpressionTerms) {
@@ -86,13 +97,13 @@ void MathExpression::setSubstitutionFor2Index0Bar(Tensor& sourceReducibleTensor)
 
 void MathExpression::setSubstitutionFor2Index2Bar(Tensor& sourceReducibleTensor) {
 	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false,2);
+	IrreducibleTensor tempIrrTensor(false, 2);
 	for (int i = 0; i < 2; ++i) {
 		tempIrrTensor.addLowerIndex(sourceReducibleTensor.getIndexNameAt(i));
 	}
 	tempMET.addIrreducibleTensor(tempIrrTensor);
 	tempMET.setCoefficient(1);
-	
+
 	addTerm(tempMET);
 }
 
@@ -114,7 +125,7 @@ void MathExpression::setSubstitutionFor2Index1Bar(Tensor& sourceReducibleTensor)
 	Delta tempDelta(sourceReducibleTensor.getIndexNameAt(1), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[1].addDelta(tempDelta);
 	tempMETs[1].addIrreducibleTensor(tempIrrTensors[1]);
-	tempMETs[1].setCoefficient(-1,5);
+	tempMETs[1].setCoefficient(-1, 5);
 
 	//Add terms to Expression
 	for (auto& tempMET : tempMETs) {
@@ -122,37 +133,17 @@ void MathExpression::setSubstitutionFor2Index1Bar(Tensor& sourceReducibleTensor)
 	}
 }
 
-void MathExpression::setSubstitutionFor2Index1Duplicate1Bar(Tensor& sourceReducibleTensor) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 2);
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	//-1 because bars to left convention
-	tempMET.setCoefficient(-1);
-	addTerm(tempMET);
-}
-
-
 void MathExpression::setSubstitutionFor2Index(Tensor& sourceReducibleTensor) {
 	int numOfBarredIndices = sourceReducibleTensor.getNumberOfBarredIndices();
-	int numOfDuplicatedIndices = sourceReducibleTensor.getNumberOfDuplicatedIndices();
-
-	if (numOfDuplicatedIndices == 1) {
-		if (numOfBarredIndices == 1) {
-			setSubstitutionFor2Index1Duplicate1Bar(sourceReducibleTensor);
-		}
+	if (numOfBarredIndices == 0) {
+		setSubstitutionFor2Index0Bar(sourceReducibleTensor);
 	}
-	else if (numOfDuplicatedIndices == 0) {
-		if (numOfBarredIndices == 0) {
-			setSubstitutionFor2Index0Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 1) {
-			setSubstitutionFor2Index1Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 2) {
-			setSubstitutionFor2Index2Bar(sourceReducibleTensor);
-		}
+	else if (numOfBarredIndices == 1) {
+		setSubstitutionFor2Index1Bar(sourceReducibleTensor);
 	}
-	
+	else if (numOfBarredIndices == 2) {
+		setSubstitutionFor2Index2Bar(sourceReducibleTensor);
+	}
 }
 
 void MathExpression::setSubstitutionFor3Index0Bar(Tensor& sourceReducibleTensor, std::string& latestName) {
@@ -167,7 +158,7 @@ void MathExpression::setSubstitutionFor3Index0Bar(Tensor& sourceReducibleTensor,
 		tempLevi.addIndex(latestName);
 		tempIrrTensor.addLowerIndex(latestName);
 	}
-	
+
 	tempMET.addIrreducibleTensor(tempIrrTensor);
 	tempMET.addLeviCivita(tempLevi);
 	tempMET.setCoefficient(1);
@@ -186,7 +177,7 @@ void MathExpression::setSubstitutionFor3Index1Bar(Tensor& sourceReducibleTensor,
 
 	//First Term
 	for (int i = 0; i < 2; ++i) {
-		tempIrrTensors[0].addUpperIndex(sourceReducibleTensor.getIndexNameAt(i+1));
+		tempIrrTensors[0].addUpperIndex(sourceReducibleTensor.getIndexNameAt(i + 1));
 	}
 	tempIrrTensors[0].addLowerIndex(sourceReducibleTensor.getIndexNameAt(0));
 
@@ -198,14 +189,14 @@ void MathExpression::setSubstitutionFor3Index1Bar(Tensor& sourceReducibleTensor,
 	Delta delta1(sourceReducibleTensor.getIndexNameAt(1), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[1].addIrreducibleTensor(tempIrrTensors[1]);
 	tempMETs[1].addDelta(delta1);
-	tempMETs[1].setCoefficient(1,4);
+	tempMETs[1].setCoefficient(1, 4);
 
 	//Third term
 	tempIrrTensors[2].addUpperIndex(sourceReducibleTensor.getIndexNameAt(1));
 	Delta delta2(sourceReducibleTensor.getIndexNameAt(2), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[2].addIrreducibleTensor(tempIrrTensors[2]);
 	tempMETs[2].addDelta(delta2);
-	tempMETs[2].setCoefficient(-1,4);
+	tempMETs[2].setCoefficient(-1, 4);
 
 	//Add terms to Expression
 	for (auto& tempMET : tempMETs) {
@@ -235,14 +226,14 @@ void MathExpression::setSubstitutionFor3Index2Bar(Tensor& sourceReducibleTensor,
 	Delta delta1(sourceReducibleTensor.getIndexNameAt(2), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[1].addIrreducibleTensor(tempIrrTensors[1]);
 	tempMETs[1].addDelta(delta1);
-	tempMETs[1].setCoefficient(1,4);
+	tempMETs[1].setCoefficient(1, 4);
 
 	//Third term
 	tempIrrTensors[2].addLowerIndex(sourceReducibleTensor.getIndexNameAt(0));
 	Delta delta2(sourceReducibleTensor.getIndexNameAt(2), sourceReducibleTensor.getIndexNameAt(1));
 	tempMETs[2].addIrreducibleTensor(tempIrrTensors[2]);
 	tempMETs[2].addDelta(delta2);
-	tempMETs[2].setCoefficient(-1,4);
+	tempMETs[2].setCoefficient(-1, 4);
 
 	//Add terms to Expression
 	for (auto& tempMET : tempMETs) {
@@ -270,62 +261,19 @@ void MathExpression::setSubstitutionFor3Index3Bar(Tensor& sourceReducibleTensor,
 	addTerm(tempMET);
 }
 
-void MathExpression::setSubstitutionFor3Index1Duplicate1Bar(Tensor& sourceReducibleTensor) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 3);
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-	
-
-	tempIrrTensor.addUpperIndex(shiftedTensor.getIndexNameAt(2));
-
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
-	addTerm(tempMET);
-}
-
-void MathExpression::setSubstitutionFor3Index1Duplicate2Bar(Tensor& sourceReducibleTensor) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 3);
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-
-	tempIrrTensor.addLowerIndex(shiftedTensor.getIndexNameAt(2));
-
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient() * -1);
-	addTerm(tempMET);
-}
-
-
 void MathExpression::setSubstitutionFor3Index(Tensor& sourceReducibleTensor, std::string& latestName) {
 	int numOfBarredIndices = sourceReducibleTensor.getNumberOfBarredIndices();
-	int numOfDuplicatedIndices = sourceReducibleTensor.getNumberOfDuplicatedIndices();
-
-	if (numOfDuplicatedIndices == 1) {
-		if (numOfBarredIndices == 1) {
-			setSubstitutionFor3Index1Duplicate1Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 2) {
-			setSubstitutionFor3Index1Duplicate2Bar(sourceReducibleTensor);
-		}
+	if (numOfBarredIndices == 0) {
+		setSubstitutionFor3Index0Bar(sourceReducibleTensor, latestName);
 	}
-	else if (numOfDuplicatedIndices == 0) {
-		if (numOfBarredIndices == 0) {
-			setSubstitutionFor3Index0Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 1) {
-			setSubstitutionFor3Index1Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 2) {
-			setSubstitutionFor3Index2Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 3) {
-			setSubstitutionFor3Index3Bar(sourceReducibleTensor, latestName);
-		}
+	else if (numOfBarredIndices == 1) {
+		setSubstitutionFor3Index1Bar(sourceReducibleTensor, latestName);
+	}
+	else if (numOfBarredIndices == 2) {
+		setSubstitutionFor3Index2Bar(sourceReducibleTensor, latestName);
+	}
+	else if (numOfBarredIndices == 3) {
+		setSubstitutionFor3Index3Bar(sourceReducibleTensor, latestName);
 	}
 }
 
@@ -333,7 +281,7 @@ void MathExpression::setSubstitutionFor1Index0Bar(Tensor& sourceReducibleTensor)
 	MathExpressionTerm tempMET;
 	IrreducibleTensor tempIrrTensor(false, 1);
 	tempIrrTensor.addUpperIndex(sourceReducibleTensor.getIndexNameAt(0));
-	
+
 	tempMET.addIrreducibleTensor(tempIrrTensor);
 	tempMET.setCoefficient(1);
 
@@ -350,6 +298,7 @@ void MathExpression::setSubstitutionFor1Index1Bar(Tensor& sourceReducibleTensor)
 
 	addTerm(tempMET);
 }
+
 
 void MathExpression::setSubstitutionFor1Index(Tensor& sourceReducibleTensor) {
 	int numOfBarredIndices = sourceReducibleTensor.getNumberOfBarredIndices();
@@ -371,11 +320,11 @@ void MathExpression::setSubstitutionFor4Index0Bar(Tensor& sourceReducibleTensor,
 	latestName = getNextName(latestName);
 	tempLevi.addIndex(latestName);
 	tempIrrTensor.addLowerIndex(latestName);
-	
+
 
 	tempMET.addIrreducibleTensor(tempIrrTensor);
 	tempMET.addLeviCivita(tempLevi);
-	tempMET.setCoefficient(1,24);
+	tempMET.setCoefficient(1, 24);
 
 	addTerm(tempMET);
 }
@@ -405,7 +354,7 @@ void MathExpression::setSubstitutionFor4Index1Bar(Tensor& sourceReducibleTensor,
 	Delta delta1(sourceReducibleTensor.getIndexNameAt(3), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[1].addIrreducibleTensor(tempIrrTensors[1]);
 	tempMETs[1].addDelta(delta1);
-	tempMETs[1].setCoefficient(-1,3);
+	tempMETs[1].setCoefficient(-1, 3);
 
 	//Third term
 	tempIrrTensors[2].addUpperIndex(sourceReducibleTensor.getIndexNameAt(1));
@@ -414,16 +363,16 @@ void MathExpression::setSubstitutionFor4Index1Bar(Tensor& sourceReducibleTensor,
 	Delta delta2(sourceReducibleTensor.getIndexNameAt(2), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[2].addIrreducibleTensor(tempIrrTensors[2]);
 	tempMETs[2].addDelta(delta2);
-	tempMETs[2].setCoefficient(1,3);
+	tempMETs[2].setCoefficient(1, 3);
 
 	//Fourth term
 	tempIrrTensors[3].addUpperIndex(sourceReducibleTensor.getIndexNameAt(2));
 	tempIrrTensors[3].addUpperIndex(sourceReducibleTensor.getIndexNameAt(3));
-	
+
 	Delta delta3(sourceReducibleTensor.getIndexNameAt(1), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[3].addIrreducibleTensor(tempIrrTensors[3]);
 	tempMETs[3].addDelta(delta3);
-	tempMETs[3].setCoefficient(-1,3);
+	tempMETs[3].setCoefficient(-1, 3);
 
 	//Add terms to Expression
 	for (auto& tempMET : tempMETs) {
@@ -456,7 +405,7 @@ void MathExpression::setSubstitutionFor4Index2Bar(Tensor& sourceReducibleTensor,
 	Delta delta1(sourceReducibleTensor.getIndexNameAt(2), sourceReducibleTensor.getIndexNameAt(1));
 	tempMETs[1].addIrreducibleTensor(tempIrrTensors[1]);
 	tempMETs[1].addDelta(delta1);
-	tempMETs[1].setCoefficient(1,3);
+	tempMETs[1].setCoefficient(1, 3);
 
 	//Third term
 	tempIrrTensors[2].addUpperIndex(sourceReducibleTensor.getIndexNameAt(3));
@@ -465,7 +414,7 @@ void MathExpression::setSubstitutionFor4Index2Bar(Tensor& sourceReducibleTensor,
 	Delta delta2(sourceReducibleTensor.getIndexNameAt(2), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[2].addIrreducibleTensor(tempIrrTensors[2]);
 	tempMETs[2].addDelta(delta2);
-	tempMETs[2].setCoefficient(-1,3);
+	tempMETs[2].setCoefficient(-1, 3);
 
 	//Fourth term
 	tempIrrTensors[3].addUpperIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -474,7 +423,7 @@ void MathExpression::setSubstitutionFor4Index2Bar(Tensor& sourceReducibleTensor,
 	Delta delta3(sourceReducibleTensor.getIndexNameAt(3), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[3].addIrreducibleTensor(tempIrrTensors[3]);
 	tempMETs[3].addDelta(delta3);
-	tempMETs[3].setCoefficient(1,3);
+	tempMETs[3].setCoefficient(1, 3);
 
 	//Fifth term
 	tempIrrTensors[4].addUpperIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -483,7 +432,7 @@ void MathExpression::setSubstitutionFor4Index2Bar(Tensor& sourceReducibleTensor,
 	Delta delta4(sourceReducibleTensor.getIndexNameAt(3), sourceReducibleTensor.getIndexNameAt(1));
 	tempMETs[4].addIrreducibleTensor(tempIrrTensors[4]);
 	tempMETs[4].addDelta(delta4);
-	tempMETs[4].setCoefficient(-1,3);
+	tempMETs[4].setCoefficient(-1, 3);
 
 	//Sixth term
 	Delta delta5(sourceReducibleTensor.getIndexNameAt(2), sourceReducibleTensor.getIndexNameAt(1));
@@ -494,7 +443,7 @@ void MathExpression::setSubstitutionFor4Index2Bar(Tensor& sourceReducibleTensor,
 	tempMETs[5].addDelta(delta5);
 	tempMETs[5].addDelta(delta6);
 
-	tempMETs[5].setCoefficient(1,20);
+	tempMETs[5].setCoefficient(1, 20);
 
 	//Seventh term
 	Delta delta7(sourceReducibleTensor.getIndexNameAt(2), sourceReducibleTensor.getIndexNameAt(0));
@@ -505,7 +454,7 @@ void MathExpression::setSubstitutionFor4Index2Bar(Tensor& sourceReducibleTensor,
 	tempMETs[6].addDelta(delta7);
 	tempMETs[6].addDelta(delta8);
 
-	tempMETs[6].setCoefficient(-1,20);
+	tempMETs[6].setCoefficient(-1, 20);
 
 	//Add terms to Expression
 	for (auto& tempMET : tempMETs) {
@@ -539,7 +488,7 @@ void MathExpression::setSubstitutionFor4Index3Bar(Tensor& sourceReducibleTensor,
 	Delta delta1(sourceReducibleTensor.getIndexNameAt(3), sourceReducibleTensor.getIndexNameAt(2));
 	tempMETs[1].addIrreducibleTensor(tempIrrTensors[1]);
 	tempMETs[1].addDelta(delta1);
-	tempMETs[1].setCoefficient(1,3);
+	tempMETs[1].setCoefficient(1, 3);
 
 	//Third term
 	tempIrrTensors[2].addLowerIndex(sourceReducibleTensor.getIndexNameAt(0));
@@ -548,7 +497,7 @@ void MathExpression::setSubstitutionFor4Index3Bar(Tensor& sourceReducibleTensor,
 	Delta delta2(sourceReducibleTensor.getIndexNameAt(3), sourceReducibleTensor.getIndexNameAt(1));
 	tempMETs[2].addIrreducibleTensor(tempIrrTensors[2]);
 	tempMETs[2].addDelta(delta2);
-	tempMETs[2].setCoefficient(-1,3);
+	tempMETs[2].setCoefficient(-1, 3);
 
 	//Fourth term
 	tempIrrTensors[3].addLowerIndex(sourceReducibleTensor.getIndexNameAt(1));
@@ -557,7 +506,7 @@ void MathExpression::setSubstitutionFor4Index3Bar(Tensor& sourceReducibleTensor,
 	Delta delta3(sourceReducibleTensor.getIndexNameAt(3), sourceReducibleTensor.getIndexNameAt(0));
 	tempMETs[3].addIrreducibleTensor(tempIrrTensors[3]);
 	tempMETs[3].addDelta(delta3);
-	tempMETs[3].setCoefficient(1,3);
+	tempMETs[3].setCoefficient(1, 3);
 
 	//Add terms to Expression
 	for (auto& tempMET : tempMETs) {
@@ -579,133 +528,29 @@ void MathExpression::setSubstitutionFor4Index4Bar(Tensor& sourceReducibleTensor,
 
 	tempMET.addIrreducibleTensor(tempIrrTensor);
 	tempMET.addLeviCivita(tempLevi);
-	tempMET.setCoefficient(1,24);
+	tempMET.setCoefficient(1, 24);
 
 	addTerm(tempMET);
 }
-
-void MathExpression::setSubstitutionFor4Index1Duplicate1Bar(Tensor& sourceReducibleTensor) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 4);
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	tempIrrTensor.addUpperIndex(shiftedTensor.getIndexNameAt(2));
-	tempIrrTensor.addUpperIndex(shiftedTensor.getIndexNameAt(3));
-
-
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	//-1 because REFERENCE would be negative if shifted to form
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient() * -1);
-	addTerm(tempMET);
-}
-
-void MathExpression::setSubstitutionFor4Index1Duplicate2Bar(Tensor& sourceReducibleTensor) {
-	std::vector<MathExpressionTerm> tempMETs(2);
-	std::vector<IrreducibleTensor> tempIrreducibleTensors;
-
-	for (int i = 0; i < 2; ++i) {
-		IrreducibleTensor t(false, 4);
-		tempIrreducibleTensors.push_back(t);
-	}
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	//Term 1
-	//Note, REFERENCE substitution has bars on left, so we adjust for that here
-	tempIrreducibleTensors[0].addUpperIndex(shiftedTensor.getIndexNameAt(3));
-	tempIrreducibleTensors[0].addLowerIndex(shiftedTensor.getIndexNameAt(2));
-
-
-	tempMETs[0].addIrreducibleTensor(tempIrreducibleTensors[0]);
-
-	//Term 2
-	Delta tempDelta;
-	tempDelta.setIndices(shiftedTensor.getIndexNameAt(3), shiftedTensor.getIndexNameAt(2));
-	tempMETs[1].addDelta(tempDelta);
-	tempMETs[1].addIrreducibleTensor(tempIrreducibleTensors[1]);
-	tempMETs[1].setCoefficient(1, 5);
-
-	//Add terms
-	for (auto& met : tempMETs) {
-		addTerm(met);
-	}
-
-	multiplyByCoefficient(shiftedTensorTerm.getCoefficient());
-}
-
-void MathExpression::setSubstitutionFor4Index1Duplicate3Bar(Tensor& sourceReducibleTensor) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 4);
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	tempIrrTensor.addLowerIndex(shiftedTensor.getIndexNameAt(2));
-	tempIrrTensor.addLowerIndex(shiftedTensor.getIndexNameAt(3));
-
-
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
-	addTerm(tempMET);
-}
-
-
-void MathExpression::setSubstitutionFor4Index2Duplicate2Bar(Tensor& sourceReducibleTensor) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 4);
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
-	addTerm(tempMET);
-}
-
 
 void MathExpression::setSubstitutionFor4Index(Tensor& sourceReducibleTensor, std::string& latestName) {
 	int numOfBarredIndices = sourceReducibleTensor.getNumberOfBarredIndices();
-	int numOfDuplicatedIndices = sourceReducibleTensor.getNumberOfDuplicatedIndices();
+	if (numOfBarredIndices == 0) {
+		setSubstitutionFor4Index0Bar(sourceReducibleTensor, latestName);
+	}
+	else if (numOfBarredIndices == 1) {
+		setSubstitutionFor4Index1Bar(sourceReducibleTensor, latestName);
+	}
+	else if (numOfBarredIndices == 2) {
+		setSubstitutionFor4Index2Bar(sourceReducibleTensor, latestName);
+	}
+	else if (numOfBarredIndices == 3) {
+		setSubstitutionFor4Index3Bar(sourceReducibleTensor, latestName);
+	}
+	else if (numOfBarredIndices == 4) {
+		setSubstitutionFor4Index4Bar(sourceReducibleTensor, latestName);
+	}
 
-
-	if (numOfDuplicatedIndices == 2) {
-		if (numOfBarredIndices == 2) {
-			setSubstitutionFor4Index2Duplicate2Bar(sourceReducibleTensor);
-		}
-	}
-	else if (numOfDuplicatedIndices == 1) {
-		if (numOfBarredIndices == 1) {
-			setSubstitutionFor4Index1Duplicate1Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 2) {
-			setSubstitutionFor4Index1Duplicate2Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 3) {
-			setSubstitutionFor4Index1Duplicate3Bar(sourceReducibleTensor);
-		}
-	}
-	else if (numOfDuplicatedIndices == 0) {
-		if (numOfBarredIndices == 0) {
-			setSubstitutionFor4Index0Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 1) {
-			setSubstitutionFor4Index1Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 2) {
-			setSubstitutionFor4Index2Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 3) {
-			setSubstitutionFor4Index3Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 4) {
-			setSubstitutionFor4Index4Bar(sourceReducibleTensor, latestName);
-		}
-	}
-	
-		
 }
 
 void MathExpression::setSubstitutionFor5Index0Bar(Tensor& sourceReducibleTensor) {
@@ -741,7 +586,7 @@ void MathExpression::setSubstitutionFor5Index1Bar(Tensor& sourceReducibleTensor,
 
 	//First Term
 	for (int i = 0; i < 4; ++i) {
-		tempLevis[0].addIndex(sourceReducibleTensor.getIndexNameAt(i+1));
+		tempLevis[0].addIndex(sourceReducibleTensor.getIndexNameAt(i + 1));
 	}
 	latestName = getNextName(latestName);
 	tempLevis[0].addIndex(latestName);
@@ -760,7 +605,7 @@ void MathExpression::setSubstitutionFor5Index1Bar(Tensor& sourceReducibleTensor,
 
 	Delta delta1(sourceReducibleTensor.getIndexNameAt(1), sourceReducibleTensor.getIndexNameAt(0));
 	for (int i = 0; i < 3; ++i) {
-		tempLevis[1].addIndex(sourceReducibleTensor.getIndexNameAt(i+2));
+		tempLevis[1].addIndex(sourceReducibleTensor.getIndexNameAt(i + 2));
 	}
 	tempLevis[1].addIndex(copyOfFirstNameObtained);
 	tempLevis[1].addIndex(latestName);
@@ -769,7 +614,7 @@ void MathExpression::setSubstitutionFor5Index1Bar(Tensor& sourceReducibleTensor,
 	tempMETs[1].addDelta(delta1);
 	tempMETs[1].addLeviCivita(tempLevis[1]);
 
-	tempMETs[1].setCoefficient(1,2);
+	tempMETs[1].setCoefficient(1, 2);
 
 	//Third Term
 	tempIrrTensors[2].addLowerIndex(copyOfFirstNameObtained);
@@ -788,7 +633,7 @@ void MathExpression::setSubstitutionFor5Index1Bar(Tensor& sourceReducibleTensor,
 	tempMETs[2].addDelta(delta2);
 	tempMETs[2].addLeviCivita(tempLevis[2]);
 
-	tempMETs[2].setCoefficient(-1,2);
+	tempMETs[2].setCoefficient(-1, 2);
 
 	//Fourth Term
 	tempIrrTensors[3].addLowerIndex(copyOfFirstNameObtained);
@@ -807,7 +652,7 @@ void MathExpression::setSubstitutionFor5Index1Bar(Tensor& sourceReducibleTensor,
 	tempMETs[3].addDelta(delta3);
 	tempMETs[3].addLeviCivita(tempLevis[3]);
 
-	tempMETs[3].setCoefficient(1,2);
+	tempMETs[3].setCoefficient(1, 2);
 
 	//Fifth Term
 	tempIrrTensors[4].addLowerIndex(copyOfFirstNameObtained);
@@ -826,7 +671,7 @@ void MathExpression::setSubstitutionFor5Index1Bar(Tensor& sourceReducibleTensor,
 	tempMETs[4].addDelta(delta4);
 	tempMETs[4].addLeviCivita(tempLevis[4]);
 
-	tempMETs[4].setCoefficient(-1,2);
+	tempMETs[4].setCoefficient(-1, 2);
 
 	//Add terms to Expression
 	for (auto& tempMET : tempMETs) {
@@ -865,7 +710,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[1].addIrreducibleTensor(tempIrrTensors[1]);
 	tempMETs[1].addDelta(delta1);
-	tempMETs[1].setCoefficient(1,2);
+	tempMETs[1].setCoefficient(1, 2);
 
 	//Third Term
 	tempIrrTensors[2].addUpperIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -877,7 +722,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[2].addIrreducibleTensor(tempIrrTensors[2]);
 	tempMETs[2].addDelta(delta2);
-	tempMETs[2].setCoefficient(-1,2);
+	tempMETs[2].setCoefficient(-1, 2);
 
 	//Fourth Term
 	tempIrrTensors[3].addUpperIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -889,7 +734,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[3].addIrreducibleTensor(tempIrrTensors[3]);
 	tempMETs[3].addDelta(delta3);
-	tempMETs[3].setCoefficient(1,2);
+	tempMETs[3].setCoefficient(1, 2);
 
 	//Fifth Term
 	tempIrrTensors[4].addUpperIndex(sourceReducibleTensor.getIndexNameAt(3));
@@ -901,7 +746,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[4].addIrreducibleTensor(tempIrrTensors[4]);
 	tempMETs[4].addDelta(delta4);
-	tempMETs[4].setCoefficient(-1,2);
+	tempMETs[4].setCoefficient(-1, 2);
 
 	//Sixth Term
 	tempIrrTensors[5].addUpperIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -913,7 +758,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[5].addIrreducibleTensor(tempIrrTensors[5]);
 	tempMETs[5].addDelta(delta5);
-	tempMETs[5].setCoefficient(1,2);
+	tempMETs[5].setCoefficient(1, 2);
 
 	//Seventh Term
 	tempIrrTensors[6].addUpperIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -925,7 +770,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[6].addIrreducibleTensor(tempIrrTensors[6]);
 	tempMETs[6].addDelta(delta6);
-	tempMETs[6].setCoefficient(-1,2);
+	tempMETs[6].setCoefficient(-1, 2);
 
 	//Eighth Term
 	tempIrrTensors[7].addUpperIndex(sourceReducibleTensor.getIndexNameAt(4));
@@ -937,7 +782,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 	tempMETs[7].addDelta(delta7);
 	tempMETs[7].addDelta(delta8);
 
-	tempMETs[7].setCoefficient(1,12);
+	tempMETs[7].setCoefficient(1, 12);
 
 	//Ninth Term
 	tempIrrTensors[8].addUpperIndex(sourceReducibleTensor.getIndexNameAt(4));
@@ -949,7 +794,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 	tempMETs[8].addDelta(delta9);
 	tempMETs[8].addDelta(delta10);
 
-	tempMETs[8].setCoefficient(-1,12);
+	tempMETs[8].setCoefficient(-1, 12);
 
 	//Tenth Term
 	tempIrrTensors[9].addUpperIndex(sourceReducibleTensor.getIndexNameAt(3));
@@ -961,7 +806,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 	tempMETs[9].addDelta(delta11);
 	tempMETs[9].addDelta(delta12);
 
-	tempMETs[9].setCoefficient(-1,12);
+	tempMETs[9].setCoefficient(-1, 12);
 
 	//Eleventh Term
 	tempIrrTensors[10].addUpperIndex(sourceReducibleTensor.getIndexNameAt(3));
@@ -973,7 +818,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 	tempMETs[10].addDelta(delta13);
 	tempMETs[10].addDelta(delta14);
 
-	tempMETs[10].setCoefficient(1,12);
+	tempMETs[10].setCoefficient(1, 12);
 
 	//Twelfth Term
 	tempIrrTensors[11].addUpperIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -985,7 +830,7 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 	tempMETs[11].addDelta(delta15);
 	tempMETs[11].addDelta(delta16);
 
-	tempMETs[11].setCoefficient(1,12);
+	tempMETs[11].setCoefficient(1, 12);
 
 	//Thirteenth Term
 	tempIrrTensors[12].addUpperIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -997,8 +842,8 @@ void MathExpression::setSubstitutionFor5Index2Bar(Tensor& sourceReducibleTensor)
 	tempMETs[12].addDelta(delta17);
 	tempMETs[12].addDelta(delta18);
 
-	tempMETs[12].setCoefficient(-1,12);
-	
+	tempMETs[12].setCoefficient(-1, 12);
+
 	//Add terms to Expression
 	for (auto& tempMET : tempMETs) {
 		addTerm(tempMET);
@@ -1019,7 +864,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 		tempIrrTensors[0].addLowerIndex(sourceReducibleTensor.getIndexNameAt(i));
 	}
 	for (int i = 0; i < 2; ++i) {
-		tempIrrTensors[0].addUpperIndex(sourceReducibleTensor.getIndexNameAt(i+3));
+		tempIrrTensors[0].addUpperIndex(sourceReducibleTensor.getIndexNameAt(i + 3));
 	}
 
 
@@ -1028,7 +873,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 
 	//Second Term
 	tempIrrTensors[1].addUpperIndex(sourceReducibleTensor.getIndexNameAt(4));
-	
+
 	tempIrrTensors[1].addLowerIndex(sourceReducibleTensor.getIndexNameAt(1));
 	tempIrrTensors[1].addLowerIndex(sourceReducibleTensor.getIndexNameAt(2));
 
@@ -1036,7 +881,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[1].addIrreducibleTensor(tempIrrTensors[1]);
 	tempMETs[1].addDelta(delta1);
-	tempMETs[1].setCoefficient(1,2);
+	tempMETs[1].setCoefficient(1, 2);
 
 	//Third Term
 	tempIrrTensors[2].addUpperIndex(sourceReducibleTensor.getIndexNameAt(4));
@@ -1048,7 +893,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[2].addIrreducibleTensor(tempIrrTensors[2]);
 	tempMETs[2].addDelta(delta2);
-	tempMETs[2].setCoefficient(-1,2);
+	tempMETs[2].setCoefficient(-1, 2);
 
 	//Fourth Term
 	tempIrrTensors[3].addUpperIndex(sourceReducibleTensor.getIndexNameAt(4));
@@ -1060,7 +905,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[3].addIrreducibleTensor(tempIrrTensors[3]);
 	tempMETs[3].addDelta(delta3);
-	tempMETs[3].setCoefficient(1,2);
+	tempMETs[3].setCoefficient(1, 2);
 
 	//Fifth Term
 	tempIrrTensors[4].addUpperIndex(sourceReducibleTensor.getIndexNameAt(3));
@@ -1072,7 +917,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[4].addIrreducibleTensor(tempIrrTensors[4]);
 	tempMETs[4].addDelta(delta4);
-	tempMETs[4].setCoefficient(-1,2);
+	tempMETs[4].setCoefficient(-1, 2);
 
 	//Sixth Term
 	tempIrrTensors[5].addUpperIndex(sourceReducibleTensor.getIndexNameAt(3));
@@ -1084,7 +929,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[5].addIrreducibleTensor(tempIrrTensors[5]);
 	tempMETs[5].addDelta(delta5);
-	tempMETs[5].setCoefficient(1,2);
+	tempMETs[5].setCoefficient(1, 2);
 
 	//Seventh Term
 	tempIrrTensors[6].addUpperIndex(sourceReducibleTensor.getIndexNameAt(3));
@@ -1096,7 +941,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 
 	tempMETs[6].addIrreducibleTensor(tempIrrTensors[6]);
 	tempMETs[6].addDelta(delta6);
-	tempMETs[6].setCoefficient(-1,2);
+	tempMETs[6].setCoefficient(-1, 2);
 
 	//Eighth Term
 	tempIrrTensors[7].addLowerIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -1108,7 +953,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 	tempMETs[7].addDelta(delta7);
 	tempMETs[7].addDelta(delta8);
 
-	tempMETs[7].setCoefficient(1,12);
+	tempMETs[7].setCoefficient(1, 12);
 
 	//Ninth Term
 	tempIrrTensors[8].addLowerIndex(sourceReducibleTensor.getIndexNameAt(1));
@@ -1120,7 +965,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 	tempMETs[8].addDelta(delta9);
 	tempMETs[8].addDelta(delta10);
 
-	tempMETs[8].setCoefficient(-1,12);
+	tempMETs[8].setCoefficient(-1, 12);
 
 	//Tenth Term
 	tempIrrTensors[9].addLowerIndex(sourceReducibleTensor.getIndexNameAt(2));
@@ -1132,7 +977,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 	tempMETs[9].addDelta(delta11);
 	tempMETs[9].addDelta(delta12);
 
-	tempMETs[9].setCoefficient(-1,12);
+	tempMETs[9].setCoefficient(-1, 12);
 
 	//Eleventh Term
 	//Maybe error
@@ -1146,7 +991,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 	tempMETs[10].addDelta(delta13);
 	tempMETs[10].addDelta(delta14);
 
-	tempMETs[10].setCoefficient(1,12);
+	tempMETs[10].setCoefficient(1, 12);
 
 	//Twelfth Term
 	tempIrrTensors[11].addLowerIndex(sourceReducibleTensor.getIndexNameAt(1));
@@ -1158,7 +1003,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 	tempMETs[11].addDelta(delta15);
 	tempMETs[11].addDelta(delta16);
 
-	tempMETs[11].setCoefficient(1,12);
+	tempMETs[11].setCoefficient(1, 12);
 
 	//Thirteenth Term
 	tempIrrTensors[12].addLowerIndex(sourceReducibleTensor.getIndexNameAt(0));
@@ -1170,7 +1015,7 @@ void MathExpression::setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor)
 	tempMETs[12].addDelta(delta17);
 	tempMETs[12].addDelta(delta18);
 
-	tempMETs[12].setCoefficient(-1,12);
+	tempMETs[12].setCoefficient(-1, 12);
 
 
 
@@ -1227,7 +1072,7 @@ void MathExpression::setSubstitutionFor5Index4Bar(Tensor& sourceReducibleTensor,
 	tempMETs[1].addDelta(delta1);
 	tempMETs[1].addLeviCivita(tempLevis[1]);
 
-	tempMETs[1].setCoefficient(1,2);
+	tempMETs[1].setCoefficient(1, 2);
 
 	//Third Term
 	tempIrrTensors[2].addUpperIndex(copyOfFirstNameObtained);
@@ -1246,7 +1091,7 @@ void MathExpression::setSubstitutionFor5Index4Bar(Tensor& sourceReducibleTensor,
 	tempMETs[2].addDelta(delta2);
 	tempMETs[2].addLeviCivita(tempLevis[2]);
 
-	tempMETs[2].setCoefficient(-1,2);
+	tempMETs[2].setCoefficient(-1, 2);
 
 	//Fourth Term
 	tempIrrTensors[3].addUpperIndex(copyOfFirstNameObtained);
@@ -1265,7 +1110,7 @@ void MathExpression::setSubstitutionFor5Index4Bar(Tensor& sourceReducibleTensor,
 	tempMETs[3].addDelta(delta3);
 	tempMETs[3].addLeviCivita(tempLevis[3]);
 
-	tempMETs[3].setCoefficient(1,2);
+	tempMETs[3].setCoefficient(1, 2);
 
 	//Fifth Term
 	tempIrrTensors[4].addUpperIndex(copyOfFirstNameObtained);
@@ -1284,7 +1129,7 @@ void MathExpression::setSubstitutionFor5Index4Bar(Tensor& sourceReducibleTensor,
 	tempMETs[4].addDelta(delta4);
 	tempMETs[4].addLeviCivita(tempLevis[4]);
 
-	tempMETs[4].setCoefficient(-1,2);
+	tempMETs[4].setCoefficient(-1, 2);
 
 	//Add terms to Expression
 	for (auto& tempMET : tempMETs) {
@@ -1307,217 +1152,26 @@ void MathExpression::setSubstitutionFor5Index5Bar(Tensor& sourceReducibleTensor)
 	addTerm(tempMET);
 }
 
-void MathExpression::setSubstitutionFor5Index1Duplicate1Bar(Tensor& sourceReducibleTensor, const std::string& latestName) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 5);
-	LeviCivita tempLevi(true);
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	tempLevi.addIndex(shiftedTensor.getIndexNameAt(2));
-	tempLevi.addIndex(shiftedTensor.getIndexNameAt(3));
-	tempLevi.addIndex(shiftedTensor.getIndexNameAt(4));
-	std::string firstNewName = getNextNameGivenNamePhase2(latestName);
-	std::string secondNewName = getNextNameGivenNamePhase2(firstNewName);
-	tempLevi.addIndex(firstNewName);
-	tempLevi.addIndex(secondNewName);
-
-	tempIrrTensor.addLowerIndex(firstNewName);
-	tempIrrTensor.addLowerIndex(secondNewName);
-
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.addLeviCivita(tempLevi);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
-	addTerm(tempMET);
-}
-
-void MathExpression::setSubstitutionFor5Index1Duplicate2Bar(Tensor& sourceReducibleTensor) {
-	std::vector<MathExpressionTerm> tempMETs(3);
-	std::vector<Delta> tempDeltas(2);
-	std::vector<IrreducibleTensor> tempIrreducibleTensors;
-
-	for (int i = 0; i < 3; ++i) {
-		IrreducibleTensor t(false, 5);
-		tempIrreducibleTensors.push_back(t);
-	}
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	//Term 1
-	tempIrreducibleTensors[0].addUpperIndex(shiftedTensor.getIndexNameAt(3));
-	tempIrreducibleTensors[0].addUpperIndex(shiftedTensor.getIndexNameAt(4));
-	tempIrreducibleTensors[0].addLowerIndex(shiftedTensor.getIndexNameAt(2));
-
-
-	tempMETs[0].addIrreducibleTensor(tempIrreducibleTensors[0]);
-
-	//Term 2
-	tempDeltas[0].setIndices(shiftedTensor.getIndexNameAt(4), shiftedTensor.getIndexNameAt(2));
-	tempMETs[1].addDelta(tempDeltas[0]);
-	tempIrreducibleTensors[1].addUpperIndex(shiftedTensor.getIndexNameAt(3));
-	tempMETs[1].addIrreducibleTensor(tempIrreducibleTensors[1]);
-	tempMETs[1].setCoefficient(1, 4);
-	
-	//Term 3
-	tempDeltas[1].setIndices(shiftedTensor.getIndexNameAt(3), shiftedTensor.getIndexNameAt(2));
-	tempMETs[2].addDelta(tempDeltas[1]);
-	tempIrreducibleTensors[2].addUpperIndex(shiftedTensor.getIndexNameAt(4));
-	tempMETs[2].addIrreducibleTensor(tempIrreducibleTensors[2]);
-	tempMETs[2].setCoefficient(-1, 4);
-
-	//Add terms
-	for (auto& met : tempMETs) {
-		addTerm(met);
-	}
-
-	multiplyByCoefficient(shiftedTensorTerm.getCoefficient() * -1);
-}
-
-void MathExpression::setSubstitutionFor5Index1Duplicate3Bar(Tensor& sourceReducibleTensor) {
-	std::vector<MathExpressionTerm> tempMETs(3);
-	std::vector<Delta> tempDeltas(2);
-	std::vector<IrreducibleTensor> tempIrreducibleTensors;
-
-	for (int i = 0; i < 3; ++i) {
-		IrreducibleTensor t(false, 5);
-		tempIrreducibleTensors.push_back(t);
-	}
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	//Term 1
-	tempIrreducibleTensors[0].addUpperIndex(shiftedTensor.getIndexNameAt(4));
-	tempIrreducibleTensors[0].addLowerIndex(shiftedTensor.getIndexNameAt(2));
-	tempIrreducibleTensors[0].addLowerIndex(shiftedTensor.getIndexNameAt(3));
-
-
-	tempMETs[0].addIrreducibleTensor(tempIrreducibleTensors[0]);
-
-	//Term 2
-	tempDeltas[0].setIndices(shiftedTensor.getIndexNameAt(4), shiftedTensor.getIndexNameAt(3));
-	tempMETs[1].addDelta(tempDeltas[0]);
-	tempIrreducibleTensors[1].addLowerIndex(shiftedTensor.getIndexNameAt(2));
-	tempMETs[1].addIrreducibleTensor(tempIrreducibleTensors[1]);
-	tempMETs[1].setCoefficient(1, 4);
-
-	//Term 3
-	tempDeltas[1].setIndices(shiftedTensor.getIndexNameAt(4), shiftedTensor.getIndexNameAt(2));
-	tempMETs[2].addDelta(tempDeltas[1]);
-	tempIrreducibleTensors[2].addLowerIndex(shiftedTensor.getIndexNameAt(3));
-	tempMETs[2].addIrreducibleTensor(tempIrreducibleTensors[2]);
-	tempMETs[2].setCoefficient(-1, 4);
-
-	//Add terms
-	for (auto& met : tempMETs) {
-		addTerm(met);
-	}
-
-	multiplyByCoefficient(shiftedTensorTerm.getCoefficient());
-}
-
-void MathExpression::setSubstitutionFor5Index1Duplicate4Bar(Tensor& sourceReducibleTensor, const std::string& latestName) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 5);
-	LeviCivita tempLevi(false);
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	tempLevi.addIndex(shiftedTensor.getIndexNameAt(2));
-	tempLevi.addIndex(shiftedTensor.getIndexNameAt(3));
-	tempLevi.addIndex(shiftedTensor.getIndexNameAt(4));
-	std::string firstNewName = getNextNameGivenNamePhase2(latestName);
-	std::string secondNewName = getNextNameGivenNamePhase2(firstNewName);
-	tempLevi.addIndex(firstNewName);
-	tempLevi.addIndex(secondNewName);
-
-	tempIrrTensor.addUpperIndex(firstNewName);
-	tempIrrTensor.addUpperIndex(secondNewName);
-
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.addLeviCivita(tempLevi);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient() * -1);
-	addTerm(tempMET);
-}
-
-void MathExpression::setSubstitutionFor5Index2Duplicate2Bar(Tensor& sourceReducibleTensor) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 5);
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	tempIrrTensor.addUpperIndex(shiftedTensor.getIndexNameAt(4));
-
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
-	addTerm(tempMET);
-}
-
-void MathExpression::setSubstitutionFor5Index2Duplicate3Bar(Tensor& sourceReducibleTensor) {
-	MathExpressionTerm tempMET;
-	IrreducibleTensor tempIrrTensor(false, 5);
-
-	TensorTerm shiftedTensorTerm = getTensorTermWithDuplicatedIndicesToLeft(sourceReducibleTensor);
-	Tensor shiftedTensor(shiftedTensorTerm.getTensor(0));
-
-	tempIrrTensor.addLowerIndex(shiftedTensor.getIndexNameAt(4));
-
-	tempMET.addIrreducibleTensor(tempIrrTensor);
-	tempMET.setCoefficient(shiftedTensorTerm.getCoefficient());
-	addTerm(tempMET);
-}
-
 void MathExpression::setSubstitutionFor5Index(Tensor& sourceReducibleTensor, std::string& latestName) {
 	int numOfBarredIndices = sourceReducibleTensor.getNumberOfBarredIndices();
-	int numOfDuplicatedIndices = sourceReducibleTensor.getNumberOfDuplicatedIndices();
-
-	if (numOfDuplicatedIndices == 2) {
-		if (numOfBarredIndices == 2) {
-			setSubstitutionFor5Index2Duplicate2Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 3) {
-			setSubstitutionFor5Index2Duplicate3Bar(sourceReducibleTensor);
-		}
+	if (numOfBarredIndices == 0) {
+		setSubstitutionFor5Index0Bar(sourceReducibleTensor);
 	}
-	else if (numOfDuplicatedIndices == 1) {
-		if (numOfBarredIndices == 1) {
-			setSubstitutionFor5Index1Duplicate1Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 2) {
-			setSubstitutionFor5Index1Duplicate2Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 3) {
-			setSubstitutionFor5Index1Duplicate3Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 4) {
-			setSubstitutionFor5Index1Duplicate4Bar(sourceReducibleTensor, latestName);
-		}
+	else if (numOfBarredIndices == 1) {
+		setSubstitutionFor5Index1Bar(sourceReducibleTensor, latestName);
 	}
-	else  if (numOfDuplicatedIndices == 0) {
-		if (numOfBarredIndices == 0) {
-			setSubstitutionFor5Index0Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 1) {
-			setSubstitutionFor5Index1Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 2) {
-			setSubstitutionFor5Index2Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 3) {
-			setSubstitutionFor5Index3Bar(sourceReducibleTensor);
-		}
-		else if (numOfBarredIndices == 4) {
-			setSubstitutionFor5Index4Bar(sourceReducibleTensor, latestName);
-		}
-		else if (numOfBarredIndices == 5) {
-			setSubstitutionFor5Index5Bar(sourceReducibleTensor);
-		}
+	else if (numOfBarredIndices == 2) {
+		setSubstitutionFor5Index2Bar(sourceReducibleTensor);
 	}
-	
+	else if (numOfBarredIndices == 3) {
+		setSubstitutionFor5Index3Bar(sourceReducibleTensor);
+	}
+	else if (numOfBarredIndices == 4) {
+		setSubstitutionFor5Index4Bar(sourceReducibleTensor, latestName);
+	}
+	else if (numOfBarredIndices == 5) {
+		setSubstitutionFor5Index5Bar(sourceReducibleTensor);
+	}
 }
 
 void MathExpression::setSubstitutionFromReducibleTensor(Tensor& sourceReducibleTensor, std::string& latestName) {
@@ -1579,7 +1233,7 @@ void MathExpression::setSubstitutionsFor3Matches(const LeviCivita& firstLevi, co
 
 }
 
-void MathExpression::setSubstitutionsFor2Matches(const LeviCivita& firstLevi, const LeviCivita& secondLevi,const  MathExpression& predeterminedDeltaExpression) {
+void MathExpression::setSubstitutionsFor2Matches(const LeviCivita& firstLevi, const LeviCivita& secondLevi, const  MathExpression& predeterminedDeltaExpression) {
 	(*this) = predeterminedDeltaExpression;
 	renameDeltaExpressionBasedOnLevis(2, firstLevi, secondLevi, *this);
 }
@@ -1610,15 +1264,6 @@ void MathExpression::multiplyByCoefficient(int regularInteger) {
 	(*this) = expandMathExpressions(*this, coeffExp);
 }
 
-void MathExpression::multiplyByCoefficient(Coefficient inpCoefficient) {
-	MathExpressionTerm tempTerm;
-	tempTerm.setCoefficient(inpCoefficient);
-	MathExpression coeffExp;
-	coeffExp.addTerm(tempTerm);
-	(*this) = expandMathExpressions(*this, coeffExp);
-}
-
-
 
 void MathExpression::setPredeterminedSubstitutionsFor2Matches(const LeviCivita& firstLevi, const LeviCivita& secondLevi) {
 	std::vector<std::vector<Delta>> deltaMatrix;
@@ -1631,13 +1276,13 @@ void MathExpression::setPredeterminedSubstitutionsFor2Matches(const LeviCivita& 
 	for (int i = 0; i < 3; ++i) {
 		for (int j = 0; j < 3; ++j) {
 			//Sets the appropriate name from the Levis. "+2" because first 2 indices are matched.
-			deltaMatrix[i][j].setIndices(secondLevi.getNameAtLocation(j+2), firstLevi.getNameAtLocation(i + 2));
+			deltaMatrix[i][j].setIndices(secondLevi.getNameAtLocation(j + 2), firstLevi.getNameAtLocation(i + 2));
 		}
 	}
 	//Find the determinant
 	(*this) = determinantOfDeltaMatrix(deltaMatrix);
 	this->multiplyByCoefficient(2);
-	
+
 }
 
 void MathExpression::setPredeterminedSubstitutionsFor1Match(const LeviCivita& firstLevi, const LeviCivita& secondLevi) {
@@ -1702,7 +1347,7 @@ void MathExpression::expandExpressionWithTermAtLocation(int location, const Math
 	originalTermExpression.addTerm(mathExpressionTerms[location]);
 
 	MathExpression expandedExpression = expandMathExpressions(originalTermExpression, mathExpression);
-	
+
 	//Remove the original term as it is multiplied into the expanded expression already
 	mathExpressionTerms.erase(mathExpressionTerms.begin() + location);
 
@@ -1765,12 +1410,12 @@ void MathExpression::expandAllLeviCivitas(const MathExpression& pred2Match, cons
 			//Remove the original term as it is multiplied into the expanded expression already
 			mathExpressionTerms[i].setCoefficient(0);
 
-						
+
 			expandedExpression.simplifyExpressionByDeltas();
 			expandedExpression.simplifyExpressionBySymmetricAsymmetricProperty();
-			
+
 			//(*this) += expandedExpression;
-			
+
 			appendWithoutReservation(expandedExpression);
 
 		}
@@ -1826,7 +1471,7 @@ void MathExpression::simplifyExpressionByRenaming() {
 					renamedTerm.reorderIndicesOfIrreducibleTensorsAndLeviCivitas();
 
 					//Technically, a successful rename, once ordered, should always be identical. But just to be safe
-					if (areMathExpressionTermsIdentical(finalResult.mathExpressionTerms[j],renamedTerm)) {
+					if (areMathExpressionTermsIdentical(finalResult.mathExpressionTerms[j], renamedTerm)) {
 						finalResult.mathExpressionTerms[j].addMathExpressionTermCoefficientToThisTerm(renamedTerm);
 						oneSuccessfulMatch = true;
 						break;
@@ -1852,6 +1497,14 @@ void MathExpression::erase0Terms() {
 }
 
 void MathExpression::simplifyExpressionBySymmetricAsymmetricProperty() {
+	//for (int i = 0; i < mathExpressionTerms.size(); ++i) {
+	//	if (!mathExpressionTerms[i].simplifyTermBySymmetricAsymmetricProperty()) {
+	//		mathExpressionTerms.erase(mathExpressionTerms.begin() + i);
+	//		--i;
+	//	}
+	//}
+
+	//Possible efficient way
 	for (auto& MET : mathExpressionTerms) {
 		MET.simplifyTermBySymmetricAsymmetricProperty();
 	}
@@ -1913,7 +1566,7 @@ MathExpression determinantOfDeltaMatrix(std::vector<std::vector<Delta>> deltaMat
 std::vector<std::vector<Delta>> getSubmatrix(const std::vector<std::vector<Delta>>& deltaMatrix, int skipRow, int skipColumn) {
 	std::vector<std::vector<Delta>> submatrix;
 	//Allocate matrix
-	for (int i = 0; i < deltaMatrix.size()-1; ++i) {
+	for (int i = 0; i < deltaMatrix.size() - 1; ++i) {
 		std::vector<Delta> tempVector(deltaMatrix.size() - 1);
 		submatrix.push_back(tempVector);
 	}
@@ -1932,207 +1585,5 @@ std::vector<std::vector<Delta>> getSubmatrix(const std::vector<std::vector<Delta
 		}
 	}
 	return submatrix;
-}
-
-//*************************Phase 2********************************
-void MathExpression::printPhase2() const {
-	if (mathExpressionTerms.empty()) {
-		cout << 0 << endl;
-	}
-	for (auto& MET : mathExpressionTerms) {
-		if (MET.getCoefficient() > 0) {
-			cout << "+";
-		}
-		MET.printPhase2();
-		cout << endl;
-	}
-}
-
-void MathExpression::printLatexPhase2() const {
-	if (mathExpressionTerms.empty()) {
-		cout << 0 << endl;
-	}
-	for (auto& MET : mathExpressionTerms) {
-		MET.printLatexPhase2();
-		cout << " ";
-	}
-}
-
-MathExpression MathExpression::expandGammaAndInitialTensor(const MathExpressionTerm& originalTerm) {
-	// We perform all permutations using binary counting. Start with calculating the end point...
-	// Number of bits in the end = number of subscripts.
-	MathExpression resultExpression;
-	std::vector<std::string> allIndexNames = originalTerm.getInitialIndicesFromGamma();
-	unsigned int numberOfIndices = allIndexNames.size();
-	MathExpressionTerm termToDuplicate(originalTerm);
-	termToDuplicate.fillBbtIndicesFromGamma();
-
-	uint32_t end = 1 << numberOfIndices;
-	for (uint32_t i = 0; i < end; i++) {
-
-		MathExpressionTerm currentGeneratedTerm(termToDuplicate);
-		uint32_t mask = 1;
-
-		int locationOfIndexToChoose = numberOfIndices - 1;
-		for (uint32_t j = 0; j < numberOfIndices; j++) {
-			uint32_t bar_state = (i & mask) >> j;
-
-			currentGeneratedTerm.fillBbtDaggersAndReducibleTensorBarsBasedOnBinaryMarker(allIndexNames[locationOfIndexToChoose], bar_state);
-			locationOfIndexToChoose--;
-			mask = mask << 1;
-		}
-		currentGeneratedTerm.setGammeIsNull(true);
-		resultExpression.addTerm(currentGeneratedTerm);
-	}
-	return resultExpression;
-}
-
-void MathExpression::shiftAllRightBbtChainBtOperatorsToLeft() {
-	for (int i = 0; i < mathExpressionTerms.size(); ++i) {
-		appendWithoutReservation(mathExpressionTerms[i].shiftRightBbtChainBtOperatorsToLeft());
-	}
-}
-
-void MathExpression::simplifyExpressionWithReducibleTensorsByDeltas() {
-	for (auto& MET : mathExpressionTerms) {
-		MET.simplifyTermWithReducibleTensorsByDeltas();
-	}
-}
-
-void MathExpression::simplifyExpressionByRenamingBbtAndReducibleTensors() {
-	if (mathExpressionTerms.size() == 0) return;
-	ProductResolver tempProductResolver;
-	std::vector<TensorTerm> tempTensorTerms;
-	for (auto& term : mathExpressionTerms) {
-		tempTensorTerms.push_back(term.convertToTensorTermEquivalent());
-	}
-	tempProductResolver.setAllReducibleTensorTermsFromVector(tempTensorTerms);
-	tempProductResolver.simplifyReducibleTensorTerms();
-
-	std::vector<TensorTerm> simplifiedTensorTerms = tempProductResolver.getSimplifiedTensorTerms();
-	
-	std::vector<MathExpressionTerm> newMathExpressionTerms;
-	for (auto& tensorTerm : simplifiedTensorTerms) {
-		newMathExpressionTerms.push_back(tensorTerm.convertToMet(mathExpressionTerms[0]));
-	}
-	mathExpressionTerms = newMathExpressionTerms;
-}
-
-void MathExpression::reduceReducibleTensorsPhase2(const std::string& calculationWideLatestName) {
-	MathExpression finalMathExpression;
-	//For every MET
-	for (int i = 0; i < mathExpressionTerms.size(); ++i) {
-		std::string latestName(calculationWideLatestName);
-		MathExpression currentMetExpression;
-		//Initial term containing fab/spinors/etc. info
-		MathExpressionTerm initialTerm(mathExpressionTerms[i]);
-		initialTerm.setCoefficient(1);
-		//Clear reducible tensors
-		initialTerm.setReducibleTensors(std::vector<Tensor>());
-		currentMetExpression.addTerm(initialTerm);
-
-		//For every reducible tensor in that met
-		for (int j = 0; j < mathExpressionTerms[i].getNumberOfReducibleTensors(); ++j) {
-			MathExpression tempME;
-			Tensor currentTensor = mathExpressionTerms[i].getReducibleTensorAt(j);
-			tempME.setSubstitutionFromReducibleTensor(currentTensor, latestName);
-			
-			////DEBUG
-			//cout << "substituting: " << endl;
-			//tempME.print();
-			//cout << endl;
-		
-			currentMetExpression = expandMathExpressions(currentMetExpression, tempME);
-		}
-		finalMathExpression += currentMetExpression;
-	}
-	(*this) = finalMathExpression;
-}
-
-TensorTerm MathExpression::getTensorTermWithDuplicatedIndicesToLeft(const Tensor& sourceReducibleTensor) {
-	Tensor tempTensor(sourceReducibleTensor);
-	TensorTerm resultTensorTerm;
-	resultTensorTerm.addTensor(tempTensor);
-	std::vector<std::string> duplicatedIndices = tempTensor.getDuplicatedIndices();
-	for (auto& dupIndex : duplicatedIndices) {
-		resultTensorTerm.shiftDuplicatedIndexToLeft(dupIndex, 0);
-	}
-	return resultTensorTerm;
-}
-
-void MathExpression::reduceRightBbtChainsByEvaluation() {
-	for (auto& met : mathExpressionTerms) {
-		met.reduceRightBbtChainByEvaluation();
-	}
-}
-
-void MathExpression::evaluateChargeConjugates() {
-	for (auto& met : mathExpressionTerms) {
-		met.evaluateChargeConjugate();
-	}
-}
-
-//NOTE: Fully ready for Phase 2
-void MathExpression::simplifyExpressionByRenamingPhase2(bool withFabMerging) {
-	sortIrreducibleAndMatterTensorsOfAllTerms();
-	reorderIndicesOfAllTensorsOfAllTerms();
-
-	MathExpression finalResult;
-	for (int i = 0; i < mathExpressionTerms.size(); ++i) {
-		bool oneSuccessfulMatch = false;
-		//Check all terms in simplified expression that has been generated so far
-		for (int j = 0; j < finalResult.getSize(); ++j) {
-
-			if (areMathExpressionTermsSameStructurePhase2(finalResult.mathExpressionTerms[j], mathExpressionTerms[i])) { 
-				MathExpressionTerm renamedTerm;
-				//Attempt to rename the indices
-				bool successfulRename = performRenameIfValidIncludingPermutationsPhase2(finalResult.mathExpressionTerms[j], mathExpressionTerms[i], renamedTerm); //to remove
-
-				if (successfulRename) {
-					renamedTerm.reorderIndicesOfAllTensors();
-
-					//Will only fail if fabs not matching
-					if (areMathExpressionTermsIdenticalIgnoringFab(finalResult.mathExpressionTerms[j], renamedTerm)) {
-						//Add terms together
-						finalResult.mathExpressionTerms[j].addMathExpressionTermCoefficientToThisTerm(renamedTerm);
-						
-						oneSuccessfulMatch = true;
-						break;
-					}
-					//If mismatched fabs, then merge
-					else if (withFabMerging) {
-						oneSuccessfulMatch = finalResult.mathExpressionTerms[j].mergeFabs(renamedTerm);
-						break;
-					}
-				}
-			}
-		}
-		if (!oneSuccessfulMatch) {
-			finalResult.addTerm(mathExpressionTerms[i]);
-		}
-	}
-	(*this) = finalResult;
-	
-	erase0Terms();
-}
-
-void MathExpression::sortIrreducibleAndMatterTensorsOfAllTerms() {
-	for (auto& MET : mathExpressionTerms) {
-		MET.sortIrreducibleAndMatterTensors();
-	}
-}
-
-void MathExpression::reorderIndicesOfAllTensorsOfAllTerms(){
-	for (auto& MET : mathExpressionTerms) {
-		MET.reorderIndicesOfAllTensors();
-	}
-}
-
-void MathExpression::chargeAllUnchargedFabs() {
-	for (auto& MET : mathExpressionTerms) {
-		if (MET.getFab().getCharge() == FabCharge::UNCHARGED) {
-			MET.chargeFabWithoutMultiplication();
-		}
-	}
 }
 

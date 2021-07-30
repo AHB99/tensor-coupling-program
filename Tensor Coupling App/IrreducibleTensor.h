@@ -9,8 +9,6 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-class MatterTensor;
-
 class IrreducibleTensor {
 public:
 	IrreducibleTensor() : isSymmetric(false), field(0), isBarred(false) { }
@@ -73,25 +71,6 @@ public:
 
 	//Returns actual SO(10) field from program's encoded version
 	std::string getPhysicalFieldFromEncodedField() const;
-
-	std::vector<std::string> getIndices() const {
-		std::vector<std::string> result;
-		result.insert(result.begin(), upperIndices.begin(), upperIndices.end());
-		result.insert(result.begin(), lowerIndices.begin(), lowerIndices.end());
-		return result;
-	}
-
-	//Phase 2
-	const std::vector<std::string>& getUpperIndices() const {
-		return upperIndices;
-	}
-	const std::vector<std::string>& getLowerIndices() const {
-		return lowerIndices;
-	}
-
-	bool hasAtleast2MatchingIndices(const MatterTensor& otherMatterTensor) const;
-
-
 
 private:
 	std::vector<std::string> upperIndices;

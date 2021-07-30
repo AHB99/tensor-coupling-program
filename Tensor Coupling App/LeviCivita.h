@@ -44,18 +44,10 @@ public:
 
 	int numberOfSimilarIndices(const LeviCivita& otherLevi) const;
 
-	const std::vector<std::string>& getIndices() const {
-		return indices;
-	}
-
-	//Phase 2
-	bool replaceIndexIfPresent(std::string oldIndex, std::string newIndex);
-
-
-
 private:
 	std::vector<std::string> indices;
 	bool isUpper;
 };
 
 #endif
+

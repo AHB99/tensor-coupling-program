@@ -33,10 +33,8 @@ public:
 	MathExpression& operator+=(const MathExpression& otherExpression);
 	void multiplyByCoefficient(int numerator, int denominator);
 	void multiplyByCoefficient(int regularInteger);
-	void multiplyByCoefficient(Coefficient inpCoefficient);
 
 
-	
 	void simplifyExpressionByDeltas();
 
 	//Only checks summing and cancellation
@@ -47,7 +45,7 @@ public:
 
 	//Converts a reducible tensor to a Math Expression of Irreducible Tensors
 	void setSubstitutionFromReducibleTensor(Tensor& sourceReducibleTensor, std::string& latestName);
-	
+
 	void setSubstitutionForLeviCivita(int numOfTermsInCommon, const LeviCivita& firstLevi, const LeviCivita& secondLevi, const MathExpression& pred2Match, const MathExpression& pred1Match, const MathExpression& pred0Match);
 
 	//Leaves term multiplied with at coefficient 0. To be deleted.
@@ -81,37 +79,6 @@ public:
 
 	void appendWithoutReservation(const MathExpression& otherExpression);
 
-	//Erases terms with coefficient = 0
-	void erase0Terms();
-
-	//Phase 2
-	void printPhase2() const;
-	void printLatexPhase2() const;
-
-	static MathExpression expandGammaAndInitialTensor(const MathExpressionTerm& met);
-	void shiftAllRightBbtChainBtOperatorsToLeft();
-
-	void simplifyExpressionWithReducibleTensorsByDeltas();
-
-	void simplifyExpressionByRenamingBbtAndReducibleTensors();
-
-	void reduceReducibleTensorsPhase2(const std::string& calculationWideLatestName);
-
-	TensorTerm getTensorTermWithDuplicatedIndicesToLeft(const Tensor& sourceReducibleTensor);
-
-	void setCoefficientOfTermAtLocation(int location, const Coefficient& inpCoeff) {
-		mathExpressionTerms[location].setCoefficient(inpCoeff);
-	}
-
-	void reduceRightBbtChainsByEvaluation();
-	void evaluateChargeConjugates();
-
-	void simplifyExpressionByRenamingPhase2(bool withFabMerging);
-	//Renaming funcs
-	void sortIrreducibleAndMatterTensorsOfAllTerms();
-	void reorderIndicesOfAllTensorsOfAllTerms();
-
-	void chargeAllUnchargedFabs();
 
 private:
 	//The Expression Substitutions from REFERENCE.pdf
@@ -131,16 +98,12 @@ private:
 	void setSubstitutionFor2Index0Bar(Tensor& sourceReducibleTensor);
 	void setSubstitutionFor2Index1Bar(Tensor& sourceReducibleTensor);
 	void setSubstitutionFor2Index2Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor2Index1Duplicate1Bar(Tensor& sourceReducibleTensor);
 
 	//Field 3 Substitutions
 	void setSubstitutionFor3Index0Bar(Tensor& sourceReducibleTensor, std::string& latestName);
 	void setSubstitutionFor3Index1Bar(Tensor& sourceReducibleTensor, std::string& latestName);
 	void setSubstitutionFor3Index2Bar(Tensor& sourceReducibleTensor, std::string& latestName);
 	void setSubstitutionFor3Index3Bar(Tensor& sourceReducibleTensor, std::string& latestName);
-	void setSubstitutionFor3Index1Duplicate1Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor3Index1Duplicate2Bar(Tensor& sourceReducibleTensor);
-
 
 	//Field 4 Substitutions
 	void setSubstitutionFor4Index0Bar(Tensor& sourceReducibleTensor, std::string& latestName);
@@ -148,11 +111,6 @@ private:
 	void setSubstitutionFor4Index2Bar(Tensor& sourceReducibleTensor, std::string& latestName);
 	void setSubstitutionFor4Index3Bar(Tensor& sourceReducibleTensor, std::string& latestName);
 	void setSubstitutionFor4Index4Bar(Tensor& sourceReducibleTensor, std::string& latestName);
-	void setSubstitutionFor4Index1Duplicate1Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor4Index1Duplicate2Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor4Index1Duplicate3Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor4Index2Duplicate2Bar(Tensor& sourceReducibleTensor);
-
 
 	//Field 5 Substitutions
 	void setSubstitutionFor5Index0Bar(Tensor& sourceReducibleTensor);
@@ -161,13 +119,6 @@ private:
 	void setSubstitutionFor5Index3Bar(Tensor& sourceReducibleTensor);
 	void setSubstitutionFor5Index4Bar(Tensor& sourceReducibleTensor, std::string& latestName);
 	void setSubstitutionFor5Index5Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor5Index1Duplicate1Bar(Tensor& sourceReducibleTensor, const std::string& latestName);
-	void setSubstitutionFor5Index1Duplicate2Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor5Index1Duplicate3Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor5Index1Duplicate4Bar(Tensor& sourceReducibleTensor, const std::string& latestName);
-	void setSubstitutionFor5Index2Duplicate2Bar(Tensor& sourceReducibleTensor);
-	void setSubstitutionFor5Index2Duplicate3Bar(Tensor& sourceReducibleTensor);
-
 
 	//Levi-Civita (with 5 indices) Substitutions
 	void setSubstitutionsFor5Matches(const LeviCivita& firstLevi, const LeviCivita& secondLevi);
@@ -177,7 +128,8 @@ private:
 	void setSubstitutionsFor1Match(const LeviCivita& firstLevi, const LeviCivita& secondLevi, const MathExpression& predeterminedDeltaExpression);
 	void setSubstitutionsFor0Matches(const LeviCivita& firstLevi, const LeviCivita& secondLevi, const MathExpression& predeterminedDeltaExpression);
 
-	
+	//Erases terms with coefficient = 0
+	void erase0Terms();
 
 
 

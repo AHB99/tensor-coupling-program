@@ -1,8 +1,5 @@
 #include "Tensor.h"
 #include "UtilityFunctions.h"
-#include "BbtChain.h"
-#include <map>
-#include <set>
 // TENSOR MEMBER DEFS
 
 
@@ -14,7 +11,7 @@ int Tensor::getNumberOfIndices() const {
 	return indices.size();
 }
 
-void Tensor::printTensor() const {
+void Tensor::printTensor() {
 	cout << label;
 	cout << "<";
 	for (int i = 0; i < indices.size(); ++i) {
@@ -27,7 +24,7 @@ void Tensor::printTensor() const {
 	cout << ">";
 }
 
-void Tensor::printLatex() const {
+void Tensor::printTensorAsLatex() {
 	cout << label << "_{";
 	for (int i = 0; i < indices.size(); ++i) {
 		if (indices[i].second == 1) {
@@ -118,7 +115,7 @@ void Tensor::changeIndexNameTo(int location, std::string newName) {
 	indices[location].first = newName;
 }
 
-void Tensor::swapIndexWithOneOnRight(int location) {
+void Tensor::swapIndexWithNextOne(int location) {
 	std::string tempName;
 	int tempBarstate;
 	tempName = indices[location].first;
@@ -129,11 +126,6 @@ void Tensor::swapIndexWithOneOnRight(int location) {
 	indices[location + 1].second = tempBarstate;
 }
 
-void Tensor::swapIndexWithOneOnLeft(int location) {
-	if (location == 0) return;
-	std::swap(indices[location], indices[location - 1]);
-}
-
 int Tensor::getNumberOfBarredIndices() const {
 	int result = 0;
 	for (auto& index : indices) {
@@ -142,104 +134,5 @@ int Tensor::getNumberOfBarredIndices() const {
 		}
 	}
 	return result;
-}
-
-//*************************Phase 2********************
-bool Tensor::replaceIndexIfPresent(const std::string& oldIndex, const std::string& newIndex) {
-	for (auto& index : indices) {
-		if (index.first == oldIndex) {
-			index.first = newIndex;
-			return true;
-		}
-	}
-	return false;
-}
-
-BbtChain Tensor::convertToBbtChain() {
-	BbtChain resultBbtChain;
-	for (auto& index : indices) {
-		if (index.second == 0) {
-			resultBbtChain.addBbt(index.first, false);
-		}
-		else {
-			resultBbtChain.addBbt(index.first, true);
-		}
-	}
-
-	return resultBbtChain;
-}
-
-int Tensor::getNumberOfDuplicatedIndices() const {
-	return getDuplicatedIndices().size();
-}
-
-std::vector<std::string> Tensor::getDuplicatedIndices() const {
-	std::vector<std::string> result;
-	std::set<std::string> nameSet;
-	for (auto& index : indices) {
-		if (nameSet.count(index.first) == 0) {
-			nameSet.insert(index.first);
-		}
-		else {
-			result.push_back(index.first);
-		}
-	}
-	return result;
-}
-
-//
-//std::vector<std::string> Tensor::getNonDuplicatedBarredIndices() const {
-//	std::vector<std::string> result;
-//	std::map<std::string, int> nameCounterMap;
-//	for (auto& index : indices) {
-//		if (nameCounterMap.count(index.first) == 0) {
-//			nameCounterMap[index.first] = 1;
-//		}
-//		else {
-//			++nameCounterMap[index.first];
-//		}
-//	}
-//	for (auto& index : indices) {
-//		if (nameCounterMap[index.first] < 2 && index.second == 1) {
-//			result.push_back(index.first);
-//		}
-//	}
-//	return result;
-//}
-//std::vector<std::string> Tensor::getNonDuplicatedUnbarredIndices() const {
-//	std::vector<std::string> result;
-//	std::map<std::string, int> nameCounterMap;
-//	for (auto& index : indices) {
-//		if (nameCounterMap.count(index.first) == 0) {
-//			nameCounterMap[index.first] = 1;
-//		}
-//		else {
-//			++nameCounterMap[index.first];
-//		}
-//	}
-//	for (auto& index : indices) {
-//		if (nameCounterMap[index.first] < 2 && index.second == 0) {
-//			result.push_back(index.first);
-//		}
-//	}
-//	return result;
-//}
-
-int Tensor::getLocationOfFirstOccurenceOfIndex(const std::string& indexName) const {
-	for (int i = 0; i < indices.size(); ++i) {
-		if (indices[i].first == indexName) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-int Tensor::getLocationOfSecondOccurenceOfIndex(const std::string& indexName) const {
-	for (int i = getLocationOfFirstOccurenceOfIndex(indexName) + 1; i < indices.size(); ++i) {
-		if (indices[i].first == indexName) {
-			return i;
-		}
-	}
-	return -1;
 }
 

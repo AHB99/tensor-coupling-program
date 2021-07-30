@@ -18,11 +18,7 @@ bool checkZoneRenameIssue(TensorTerm& sourceTerm, TensorTerm& attemptTerm, std::
 }
 
 bool performRenameIfValid(TensorTerm& sourceTerm, TensorTerm& attemptTerm, TensorTerm& renamedTerm) {
-	////Aug2nd debug
-	//Notice, initial mapping should be attemptTerms names. Previous method worked by coincidence.
-	//std::vector<std::string> allSourceNames = sourceTerm.getListOfNames();
-	std::vector<std::string> allSourceNames = attemptTerm.getListOfNames();
-	////end Aug2nd debug
+	std::vector<std::string> allSourceNames = sourceTerm.getListOfNames();
 	renamedTerm = attemptTerm;
 	std::vector<std::pair<std::string, std::string>> renameMap;
 	//Fill map with indices and empty assignments
@@ -244,12 +240,12 @@ int gcd(int a, int b) {
 		return a;
 	}
 	else {
-		return abs(gcd(b,a%b));
+		return abs(gcd(b, a % b));
 	}
 }
 
 int lcm(int a, int b) {
-	return ((a*b) / gcd(a, b));
+	return ((a * b) / gcd(a, b));
 }
 
 void swapStrings(std::string& string1, std::string& string2) {
@@ -259,23 +255,23 @@ void swapStrings(std::string& string1, std::string& string2) {
 }
 
 bool compareIrreducibleTensorsByField(const IrreducibleTensor& lhs, const IrreducibleTensor& rhs) {
-	return ((lhs.getField())<(rhs.getField()));
+	return ((lhs.getField()) < (rhs.getField()));
 }
 
 bool compareIrreducibleTensorsBySymmetryState(const IrreducibleTensor& lhs, const IrreducibleTensor& rhs) {
-	return ((lhs.getSymmetryState())<(rhs.getSymmetryState()));
+	return ((lhs.getSymmetryState()) < (rhs.getSymmetryState()));
 }
 
 bool compareIrreducibleTensorsByBarState(const IrreducibleTensor& lhs, const IrreducibleTensor& rhs) {
-	return ((lhs.getBarState())<(rhs.getBarState()));
+	return ((lhs.getBarState()) < (rhs.getBarState()));
 }
 
 bool compareIrreducibleTensorsByNumberOfLowerIndices(const IrreducibleTensor& lhs, const IrreducibleTensor& rhs) {
-	return ((lhs.getNumberOfLowerIndices())<(rhs.getNumberOfLowerIndices()));
+	return ((lhs.getNumberOfLowerIndices()) < (rhs.getNumberOfLowerIndices()));
 }
 
 bool compareIrreducibleTensorsByNumberOfUpperIndices(const IrreducibleTensor& lhs, const IrreducibleTensor& rhs) {
-	return ((lhs.getNumberOfUpperIndices())<(rhs.getNumberOfUpperIndices()));
+	return ((lhs.getNumberOfUpperIndices()) < (rhs.getNumberOfUpperIndices()));
 }
 
 
@@ -284,7 +280,7 @@ bool checkZoneRenameIssueInIrreducibleTensors(const MathExpressionTerm& sourceTe
 		if ((attemptTerm.getLeviAt(0).doesIndexExist(rename.first)) && (!(sourceTerm.getLeviAt(0).doesIndexExist(rename.second)))) {
 			return false;
 		}
-	}	
+	}
 	for (int i = 0; i < attemptTerm.getNumberOfIrreducibleTensors(); ++i) {
 		//if the old name exists in the attempt term but the new name does not exist in the source term.
 		if ((attemptTerm.getTensorAt(i).doesIndexExistInUpperZone(rename.first)) && (!(sourceTerm.getTensorAt(i).doesIndexExistInUpperZone(rename.second)))) {
@@ -313,15 +309,15 @@ bool performRenameIfValidOnIrreducibleTensors(const MathExpressionTerm& sourceTe
 		}
 
 		//If it is not in the Levi and is upper
-		if ((tensorOfFirstOccurence!= -1)&&(isIndexInUpperZone)) {
+		if ((tensorOfFirstOccurence != -1) && (isIndexInUpperZone)) {
 			//Try to assign it to any sourceTerm index of that zone, till nothing works
 			for (int j = 0; j < attemptTerm.getTensorAt(tensorOfFirstOccurence).getNumberOfUpperIndices(); ++j) {
 				bool indexAlreadyAssigned = isNameAlreadyAssigned(renameMap, sourceTerm.getTensorAt(tensorOfFirstOccurence).getUpperIndexAt(j));
-		
+
 				std::pair<std::string, std::string> trialRename(attemptTermIndices[i], sourceTerm.getTensorAt(tensorOfFirstOccurence).getUpperIndexAt(j));
 				bool noZoneRenameIssue = checkZoneRenameIssueInIrreducibleTensors(sourceTerm, attemptTerm, trialRename);
-				
-				if ((!indexAlreadyAssigned)&&(noZoneRenameIssue)) {
+
+				if ((!indexAlreadyAssigned) && (noZoneRenameIssue)) {
 					renameMap.push_back(trialRename);
 					break;
 				}
@@ -330,7 +326,7 @@ bool performRenameIfValidOnIrreducibleTensors(const MathExpressionTerm& sourceTe
 				if (j == (attemptTerm.getTensorAt(tensorOfFirstOccurence).getNumberOfUpperIndices() - 1)) {
 					return false;
 				}
-			
+
 			}
 		}
 		//Else if it is not in the Levi and it is lower
@@ -388,6 +384,13 @@ bool performRenameIfValidOnIrreducibleTensors(const MathExpressionTerm& sourceTe
 }
 
 std::string getNewNameFromRenameMap(const std::string& oldName, std::vector<std::pair<std::string, std::string>> renameMap) {
+	//for (auto& rename : renameMap) {
+	//	if (rename.first == oldName) {
+	//		return rename.second;
+	//	}
+	//}
+	//return "";
+	//Trial
 	auto it = std::find_if(renameMap.begin(), renameMap.end(), [&oldName](std::pair<std::string, std::string>& element) {return element.first == oldName; });
 	if (it != renameMap.end()) {
 		return it->second;
@@ -489,8 +492,8 @@ void renameDeltaExpressionBasedOnLevis(int numOfMatches, const LeviCivita& first
 		}
 		for (int i = 0; i < 3; ++i) {
 			std::string oldName(1, charIter);
-			if (secondLevi.getNameAtLocation(i+2) != oldName) {
-				std::pair<std::string, std::string> tempRename(oldName, secondLevi.getNameAtLocation(i+2));
+			if (secondLevi.getNameAtLocation(i + 2) != oldName) {
+				std::pair<std::string, std::string> tempRename(oldName, secondLevi.getNameAtLocation(i + 2));
 				renameMap.push_back(tempRename);
 			}
 			++charIter;
@@ -550,7 +553,7 @@ bool isCoefficientZero(const MathExpressionTerm& MET) {
 
 bool compareIndexStrengths(const std::string& lhs, const std::string& rhs) {
 	//If both are in same range (before or after i) no special treatment needed
-	if (((lhs >= "i")&&(rhs >= "i"))|| ((lhs < "i") && (rhs < "i"))) {
+	if (((lhs >= "i") && (rhs >= "i")) || ((lhs < "i") && (rhs < "i"))) {
 		return lhs < rhs;
 	}
 	//Else, on opposite sides of i, behind i is stronger
@@ -562,235 +565,5 @@ bool compareIndexStrengths(const std::string& lhs, const std::string& rhs) {
 	}
 }
 
-
-//**************** Phase 2 **************************************
-//Leaving 'a' and 'b' for generation indices
-
-std::string getNextNameGivenTerm(const MathExpressionTerm& met) {
-	std::vector<std::string> allNames{ met.getAllUniqueNamesOfTerm() };
-	if (allNames.empty()) return "i";
-	std::sort(allNames.begin(), allNames.end(), compareIndexStrengths);
-	for (auto iter = allNames.begin(); iter != (--(allNames.end())); ++iter) {
-		std::string nextPossibleName;
-		//Wrap letters to c 
-		if (*iter == "z") {
-			nextPossibleName = "c";
-		}
-		else {
-			nextPossibleName = std::string{ (char)((*iter)[0] + 1) };
-		}
-		//If gap available return this
-		if (nextPossibleName != (*(iter+1))) {
-			return nextPossibleName;
-		}
-		
-	}
-	//If no gap found, return next after last
-	//Wrap letters to a
-	if (allNames.back() == "z") {
-		return "c";
-	}
-	else {
-		return std::string{ (char)((allNames.back()[0]) + 1) };
-	}
-}
-
-//To use when full MET is not available (because it's being "created" during substitution step)
-//Leaving 'a' and 'b' for generation indices
-std::string getNextNameGivenNamePhase2(const std::string& oldName) {
-	char charOldName = oldName[0];
-	if (charOldName == 'z') {
-		charOldName = 'c';
-	}
-	else {
-		charOldName++;
-	}
-	std::string result;
-	result.push_back(charOldName);
-	return result;
-}
-
-long combination(int n, int r) {
-	return factorial(n) / (factorial(r) * factorial(n - r));
-}
-
-int reorderIndicesAntisymmetrically(std::vector<std::string>& vec) {
-	int coefficient = 1;
-	bool modified = true;
-	while (modified) {
-		modified = false;
-		//Check till second last index
-		for (int i = 0; i < ((int)vec.size()) - 1; ++i) {
-			if ( vec[i] > vec[i+1]) {
-				std::swap(vec[i],vec[i+1]);
-
-				//Based on FIXED assumption that 'a' and 'b' are strictly generation indices
-				if (!isPairOfGenerationAndRegularIndices(vec[i], vec[i + 1])) {
-					coefficient *= -1;
-				}
-				modified = true;
-			}
-
-		}
-	}
-	return coefficient;
-}
-
-//FIXED assumption that 'a' and 'b' are only generation indices
-//XOR between first and second
-bool isPairOfGenerationAndRegularIndices(const std::string& firstIndex, const std::string& secondIndex) {
-	bool firstIndexIsGeneration = (firstIndex == "a" || firstIndex == "b");
-	bool secondIndexIsGeneration = (secondIndex == "a" || secondIndex == "b");
-
-	return ((firstIndexIsGeneration && !secondIndexIsGeneration)
-			|| (!firstIndexIsGeneration && secondIndexIsGeneration));
-}
-
-
-bool areMathExpressionTermsSameStructurePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm)
-{
-	if (!areMathExpressionTermsSameStructure(sourceTerm, attemptTerm)) return false;
-	if (sourceTerm.getFab().getField() != attemptTerm.getFab().getField()) return false;
-	if (sourceTerm.getFab().getIsNull() != attemptTerm.getFab().getIsNull()) return false;
-	//sif (sourceTerm.getFab().getCharge() != attemptTerm.getFab().getCharge()) return false;
-	if (sourceTerm.getNumberOfMatterTensors() != attemptTerm.getNumberOfMatterTensors()) {
-		return false;
-	}
-	for (int i = 0; i < sourceTerm.getNumberOfMatterTensors(); ++i) {
-		if (!(sourceTerm.getMatterTensorAt(i).isSameStructure(attemptTerm.getMatterTensorAt(i)))) {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool areMathExpressionTermsIdenticalIgnoringFab(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm)
-{
-	if (!areMathExpressionTermsIdentical(sourceTerm, attemptTerm)) return false;
-	for (int i = 0; i < sourceTerm.getNumberOfMatterTensors(); ++i) {
-		if (sourceTerm.getMatterTensorAt(i) != attemptTerm.getMatterTensorAt(i)) return false;
-	}
-	if (!sourceTerm.getFab().getIsNull() && !attemptTerm.getFab().getIsNull()) {
-		if (sourceTerm.getFab() != attemptTerm.getFab()) return false;
-	}
-	return true;
-}
-
-//NOTE: Fully ready for Phase 2
-bool performRenameIfValidPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, MathExpressionTerm& renamedTerm) {
-	std::vector<std::string> attemptTermIndices(attemptTerm.getAllUniqueNamesOfTerm());
-	std::vector<std::pair<std::string, std::string>> renameMap;
-	renamedTerm = attemptTerm;
-
-	//For each attemptTerm name
-	for (int i = 0; i < attemptTermIndices.size(); ++i) {
-		LocationOfIndexPojo locationOfIndex = attemptTerm.getLocationOfFirstOccurenceOfIndex(attemptTermIndices[i]);
-		bool didSucceed = true;
-
-		if (locationOfIndex.tensorType == TensorType::IRREDUCIBLE_TENSOR) {
-			if (locationOfIndex.isUpper) {
-				didSucceed = trySingleRenamePhase2(sourceTerm, attemptTerm, sourceTerm.getTensorAt(locationOfIndex.loc).getUpperIndices(), renameMap, attemptTermIndices[i]);
-			}
-			else {
-				didSucceed = trySingleRenamePhase2(sourceTerm, attemptTerm, sourceTerm.getTensorAt(locationOfIndex.loc).getLowerIndices(), renameMap, attemptTermIndices[i]);
-			}
-		}
-		else if (locationOfIndex.tensorType == TensorType::MATTER_TENSOR) {
-			if (locationOfIndex.isUpper) {
-				didSucceed = trySingleRenamePhase2(sourceTerm, attemptTerm, sourceTerm.getMatterTensorAt(locationOfIndex.loc).getUpperIndices(), renameMap, attemptTermIndices[i]);
-			}
-			else {
-				didSucceed = trySingleRenamePhase2(sourceTerm, attemptTerm, sourceTerm.getMatterTensorAt(locationOfIndex.loc).getLowerIndices(), renameMap, attemptTermIndices[i]);
-			}
-		}
-		else if (locationOfIndex.tensorType == TensorType::LEVI) {
-			didSucceed = trySingleRenamePhase2(sourceTerm, attemptTerm, sourceTerm.getLeviAt(0).getIndices(), renameMap, attemptTermIndices[i]);
-		}
-		else if (locationOfIndex.tensorType == TensorType::FAB) {
-			didSucceed = trySingleRenamePhase2(sourceTerm, attemptTerm, sourceTerm.getFab().getIndices(), renameMap, attemptTermIndices[i]);
-		}
-
-		if (!didSucceed) return false;
-	}
-
-	renamedTerm.performRenamesPhase2(renameMap);
-
-	return true;
-}
-
-//TODO: Make Phase 2
-bool performRenameIfValidIncludingPermutationsPhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, MathExpressionTerm& renamedTerm)
-{
-	////If sourceTerm (and hence also attemptTerm, since structure is same) is ambiguous
-	//if (sourceTerm.isAmbiguous()) {
-	//	//Generate all possible arrangments for the attemptTerm, and try to match them with the sourceTerm
-	//	std::vector<MathExpressionTerm> allPossiblePermutationsOfAttemptTerm;
-	//	attemptTerm.getAllPermutationsOfAllAmbiguousZones(allPossiblePermutationsOfAttemptTerm);
-	//	//If atleast one works, use that. If none work, then Rename Failure
-	//	for (auto& permutationOfAttemptTerm : allPossiblePermutationsOfAttemptTerm) {
-	//		if (performRenameIfValidOnIrreducibleTensors(sourceTerm, permutationOfAttemptTerm, renamedTerm)) {
-	//			return true;
-	//		}
-	//	}
-	//	return false;
-	//}
-	//If non-ambiguous, solve as usual.
-	//else {
-	return performRenameIfValidPhase2(sourceTerm, attemptTerm, renamedTerm);
-	//}
-}
-
-bool checkZoneRenameIssuePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, const std::pair<std::string, std::string>& rename){
-	if (!checkZoneRenameIssueInIrreducibleTensors(sourceTerm, attemptTerm, rename)) return false;
-	for (int i = 0; i < attemptTerm.getNumberOfMatterTensors(); ++i) {
-		//if the old name exists in the attempt term but the new name does not exist in the source term.
-		if ((attemptTerm.getMatterTensorAt(i).doesIndexExistInUpperZone(rename.first)) && (!(sourceTerm.getMatterTensorAt(i).doesIndexExistInUpperZone(rename.second)))) {
-			return false;
-		}
-		if ((attemptTerm.getMatterTensorAt(i).doesIndexExistInLowerZone(rename.first)) && (!(sourceTerm.getMatterTensorAt(i).doesIndexExistInLowerZone(rename.second)))) {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool trySingleRenamePhase2(const MathExpressionTerm& sourceTerm, const MathExpressionTerm& attemptTerm, const std::vector<std::string>& blindVector, std::vector<std::pair<std::string, std::string>>& renameMap, const std::string& attemptedRename){
-	//Try to assign it to any sourceTerm index of that zone, till nothing works
-	for (int i = 0; i < blindVector.size(); ++i) {
-		bool indexAlreadyAssigned = isNameAlreadyAssigned(renameMap, blindVector[i]);
-
-		std::pair<std::string, std::string> trialRename(attemptedRename, blindVector[i]);
-		bool noZoneRenameIssue = checkZoneRenameIssuePhase2(sourceTerm, attemptTerm, trialRename);
-
-		if ((!indexAlreadyAssigned) && (noZoneRenameIssue)) {
-			renameMap.push_back(trialRename);
-			break;
-		}
-
-		//If no success, and we've reached the end of the zone, Rename Failure. End process.
-		if (i == (((int)blindVector.size()) - 1)) {
-			return false;
-		}
-	}
-	return true;
-}
-
-std::string getGenericPhysicalFieldFromEncodedField(int field) {
-	if (field == 1) {
-		return "10";
-	}
-	else if (field == 2) {
-		return "45";
-	}
-	else if (field == 3) {
-		return "120";
-	}
-	else if (field == 4) {
-		return "210";
-	}
-	else {	
-		return "126";
-	}
-}
 
 
